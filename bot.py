@@ -1,3 +1,4 @@
+import os
 import logging
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
@@ -5,11 +6,12 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import handlers
 import settings
 
-# Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    level=logging.INFO)
+                    level=logging.DEBUG)
 
 log = logging.getLogger(__name__)
+
+PORT = int(os.environ.get('PORT', '8443'))
 
 
 def main():
@@ -29,12 +31,14 @@ def main():
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handlers.echo))
 
-    # Start the Bot
-    updater.start_polling()
+    updater.start_webhook(listen='0.0.0.0',
+                          port=8443,
+                          url_path=settings.BOT_API_TOKEN,
+                          key='private.key',
+                          cert='cert.pem',
+                          webhook_url='https://18.133.32.222:8443/{}'.format(settings.BOT_API_TOKEN))
 
-    # Run the bot until you press Ctrl-C or the process receives SIGINT,
-    # SIGTERM or SIGABRT. This should be used most of the time, since
-    # start_polling() is non-blocking and will stop the bot gracefully.
+    updater.bot.set_webhook('https://18.133.32.222:8443/{}'.format(settings.BOT_API_TOKEN))
     updater.idle()
 
 
