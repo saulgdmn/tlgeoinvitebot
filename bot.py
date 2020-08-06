@@ -38,7 +38,7 @@ def main():
                           cert='cert.pem',
                           webhook_url='https://18.133.32.222:8443/{}'.format(settings.BOT_API_TOKEN))
 
-    updater.bot.set_webhook('https://18.133.32.222:8443/{}'.format(settings.BOT_API_TOKEN))
+    #updater.bot.set_webhook('https://18.133.32.222:8443/{}'.format(settings.BOT_API_TOKEN))
     updater.idle()
 
 
