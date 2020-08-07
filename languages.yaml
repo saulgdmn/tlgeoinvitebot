@@ -1,0 +1,24 @@
+en:
+  name: "English"
+  shortcut: "en"
+  start_message: |
+    Hi! I'm Geo Invite Bot, I will help you invite your friends to <b>GEO INDIA group</b>!
+
+    Click <b>try now</b> below and choose a friend chat / group / channel from where you want to invite your friends.
+
+    Your friends who joined the group via your invite message will increase your winning chances!
+
+  invite_message: |
+    Hi! You have been invited to <b>{chat_title}</b>.
+    Press the button to accept!
+
+  notification_message: "GEO #InviteIndia contest is now Live on this group. If you want to participate, please message @geoinvite_bot."
+
+  stats_message: |
+    Statistic for <b>{group_title}</b>:
+
+    {formatted_users_rating}
+
+    Total count of invited Friends: <b>{total_invited_users_count}</b>
+
+  stats_pattern: "{user_mention} - <b>{invited_users_count}</b> invites"

@@ -5,11 +5,9 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 import handlers
 import settings
+import utility
 
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    level=logging.DEBUG)
-
-log = logging.getLogger(__name__)
+from utility import log
 
 PORT = int(os.environ.get('PORT', '8443'))
 
@@ -31,6 +29,9 @@ def main():
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handlers.echo))
 
+    updater.start_polling()
+
+    """
     updater.start_webhook(listen='0.0.0.0',
                           port=8443,
                           url_path=settings.BOT_API_TOKEN,
@@ -38,7 +39,7 @@ def main():
                           cert='cert.pem',
                           webhook_url='https://18.133.32.222:8443/{}'.format(settings.BOT_API_TOKEN))
 
-    updater.bot.set_webhook('https://18.133.32.222:8443/{}'.format(settings.BOT_API_TOKEN))
+    """
     updater.idle()
 
 
