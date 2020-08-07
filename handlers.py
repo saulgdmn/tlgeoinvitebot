@@ -13,7 +13,7 @@ def start_command(update: Update, context: CallbackContext):
     """Handle the command /help issued in private chat."""
 
     markup = InlineKeyboardMarkup([[InlineKeyboardButton(text='Try now!', switch_inline_query='')]])
-    update.effective_chat.send_message(text=settings.LANGUAGES['start_message'], reply_markup=markup, parse_mode='HTML')
+    update.effective_chat.send_message(text='start_message', reply_markup=markup, parse_mode='HTML')
 
 
 @administrators_only
@@ -114,10 +114,13 @@ def pick_language_callback(update: Update, context: CallbackContext):
                                                markup=generate_chat_settings_markup(chat))
 
 
-def change_language_callback(update: Update, context: CallbackContext):
+def send_stats_callback(update: Update, context: CallbackContext):
     chat_id = context.match.groupdict().get('chat_id', None)
     chat = SpectatedChat.get_by_chat_id(chat_id)
     if chat is None:
-        log.info('change_language_callback chat not founded: {}'.format(chat_id))
+        log.info('send_stats_callback chat not founded: {}'.format(chat_id))
         return
+
+    markup = InlineKeyboardMarkup([[InlineKeyboardButton(text='Try now!', switch_inline_query='')]])
+    context.bot.send_message(text=format_chat_stats(context.bot, chat), chat_id=chat_id, reply_markup=markup)
 

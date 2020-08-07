@@ -13,6 +13,17 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 log = logging.getLogger(__name__)
 
 
+def get_chat_lang(chat: SpectatedChat):
+    for lang in settings.LANGUAGES:
+        if chat.language == lang['shortcut']:
+            return lang
+
+    for lang in settings.LANGUAGES:
+        if chat.language == 'en':
+            return lang
+
+
+
 def load_languages_pack(path='./languages.yaml'):
 
     try:
@@ -52,20 +63,22 @@ def administrators_only(func):
     return wrapped
 
 
-def format_statistic(bot, user_stats, chat_id):
+def format_chat_stats(bot, chat: SpectatedChat, top):
     """Return a formatted string of user referral statistic"""
+
+    user_stats = chat.retrieve_referral_records()[:top]
 
     formatted_users = []
     for key, stat in enumerate(user_stats):
-        user = bot.get_chat_member(chat_id=chat_id, user_id=stat['user_id']).user
+        user = bot.get_chat_member(chat_id=chat.chat_id, user_id=stat['user_id']).user
 
         formatted_users.append(
-            settings.STAT_USER_PATT.format(score=stat['invited_users_count'], user_mention=user.mention_html()))
-
+            get_chat_lang(chat).get('user_stat_pattern').format(invited_users_count=stat['invited_users_count'],
+                                                                user_mention=user.mention_html()))
     total_invited_users_count = sum([stat['invited_users_count'] for stat in user_stats])
-    return settings.STAT_COMMAND_TEXT.format(group_title=bot.get_chat(chat_id=chat_id).title,
-                                             formatted_user_rating='\n'.join(formatted_users),
-                                             total_invited_users_count=total_invited_users_count)
+    return get_chat_lang(chat).get('stats_message').format(chat_title=chat.title,
+                                                           formatted_users='\n'.join(formatted_users),
+                                                           total_invited_users_count=total_invited_users_count)
 
 
 def generate_chats_markup(chats: [SpectatedChat]):

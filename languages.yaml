@@ -15,10 +15,10 @@ en:
   notification_message: "GEO #InviteIndia contest is now Live on this group. If you want to participate, please message @geoinvite_bot."
 
   stats_message: |
-    Statistic for <b>{group_title}</b>:
+    Statistic for <b>{chat_title}</b>:
 
-    {formatted_users_rating}
+    {formatted_users}
 
     Total count of invited Friends: <b>{total_invited_users_count}</b>
 
-  stats_pattern: "{user_mention} - <b>{invited_users_count}</b> invites"
+  user_stat_pattern: "{user_mention} - <b>{invited_users_count}</b> invites"
