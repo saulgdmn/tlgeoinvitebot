@@ -48,7 +48,8 @@ def start_deeplinking_command(update: Update, context: CallbackContext):
     markup = InlineKeyboardMarkup([[InlineKeyboardButton(text='Join now!', url=invited_chat.invite_link)]])
     update.effective_chat.send_message(text=get_chat_lang(invited_chat).get('start_invite_message').
                                        format(chat_title=invited_chat.title),
-                                       reply_markup=markup)
+                                       reply_markup=markup,
+                                       parse_mode='HTML')
 
 
 @administrators_only
