@@ -23,6 +23,7 @@ def chats_command_handler(update: Update, context: CallbackContext):
     """Handle the command /chats issued in a private chat."""
 
     chats = SpectatedChat.get_list()
+    log.info(chats)
     if chats is None:
         update.effective_chat.send_message(text='There are no spectated chats!')
         return
