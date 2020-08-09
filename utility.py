@@ -23,7 +23,6 @@ def get_chat_lang(chat: SpectatedChat):
             return lang
 
 
-
 def load_languages_pack(path='./languages.yaml'):
 
     try:
@@ -44,12 +43,21 @@ def is_admin(bot, chat_id, user_id):
     return True
 
 
-def is_member(bot, chat_id, user_id, status=['member', 'creator', 'administrator', 'restricted']):
+def has_admin(bot, chat_id):
+
+    ids = [member.user.id for member in bot.get_chat_administrators(chat_id=chat_id)]
+    for id in settings.ADMINISTRATOR_IDS:
+        if id in ids:
+            return True
+    return False
+
+
+def is_member(bot, chat_id, user_id):
     member = bot.get_chat_member(chat_id=chat_id, user_id=user_id)
     if member is None:
         return False
 
-    return member.status in status
+    return member.status in ['member', 'creator', 'administrator', 'restricted']
 
 
 def administrators_only(func):
@@ -137,5 +145,6 @@ def generate_chat_settings_markup(chat: SpectatedChat):
         InlineKeyboardButton(text='Language',
                              callback_data=settings.CALLBACK_DATA_PATTERNS['CHANGE_LANGUAGE'].
                              format(chat_id=chat.chat_id)))
+
 
     return InlineKeyboardMarkup([buttons])

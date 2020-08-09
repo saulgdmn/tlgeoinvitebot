@@ -125,7 +125,7 @@ class ReferralRecord(BaseModel):
 
     def add(chat_id, from_user, to_user):
         return ReferralRecord.create(chat_id=chat_id, from_user=from_user, to_user=to_user,
-                                     date=datetime.datetime.now())
+                                     date=datetime.datetime.now(), joined_chat=False)
 
     def get(chat_id, to_user):
         return ReferralRecord.get_or_none(ReferralRecord.chat_id == chat_id, ReferralRecord.to_user == to_user)

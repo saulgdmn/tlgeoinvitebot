@@ -18,7 +18,8 @@ CALLBACK_DATA_PATTERNS = {
     'DISABLE_NOTIFICATIONS': 'dntf_{chat_id}',
     'CHANGE_LANGUAGE': 'clng_{chat_id}',
     'PICK_LANGUAGE': 'plng_{chat_id}_{language_shortcut}',
-    'SEND_STATS': 'ssts_{chat_id}'
+    'SEND_STATS': 'ssts_{chat_id}',
+    'INVITE_MESSAGE': 'imsg_{chat_id}_{user_id}'
 }
 
 CALLBACK_DATA_REGEX = {
@@ -30,4 +31,5 @@ CALLBACK_DATA_REGEX = {
     'CHANGE_LANGUAGE': '^clng_(?<chat_id>[\-\d]+)$',
     'PICK_LANGUAGE': '^plng_(?<chat_id>[\-\d]+)_(?<language_shortcut>[\-a-z]+)$',
     'SEND_STATS': '^ssts_(?<chat_id>[\-\d]+)$',
+    'INVITE_MESSAGE': '^imsg_(?<chat_id>[\-\d]+)_(?<user_id>[\-\d]+)$'
 }

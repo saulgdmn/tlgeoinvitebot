@@ -1,5 +1,4 @@
-en:
-  name: "English"
+- name: "English"
   shortcut: "en"
   start_message: |
     Hi! I'm Geo Invite Bot, I will help you invite your friends to <b>GEO INDIA group</b>!

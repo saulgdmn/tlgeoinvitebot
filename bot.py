@@ -1,7 +1,8 @@
 import os
 import logging
 
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from telegram.ext import Updater, CommandHandler, InlineQueryHandler, CallbackQueryHandler,\
+    MessageHandler, Filters
 
 import handlers
 import settings
@@ -23,11 +24,24 @@ def main():
     dp = updater.dispatcher
 
     # on different commands - answer in Telegram
-    dp.add_handler(CommandHandler("start", handlers.start))
-    dp.add_handler(CommandHandler("help", handlers.help))
+    dp.add_handler(CommandHandler("start", handlers.start_command, filters=Filters.private))
+    dp.add_handler(CommandHandler("chats", handlers.chats_command_handler, filters=Filters.private))
 
-    # on noncommand i.e message - echo the message on Telegram
-    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handlers.echo))
+    dp.add_handler(CallbackQueryHandler(handlers.pick_chat_callback, settings.CALLBACK_DATA_REGEX['PICK_CHAT']))
+    dp.add_handler(CallbackQueryHandler(handlers.enable_chat_callback, settings.CALLBACK_DATA_REGEX['ENABLE_CHAT']))
+    dp.add_handler(CallbackQueryHandler(handlers.disable_chat_callback, settings.CALLBACK_DATA_REGEX['DISABLE_CHAT']))
+    dp.add_handler(CallbackQueryHandler(handlers.enable_notifications_callback, settings.CALLBACK_DATA_REGEX['ENABLE_NOTIFICATIONS']))
+    dp.add_handler(CallbackQueryHandler(handlers.disable_notifications_callback, settings.CALLBACK_DATA_REGEX['DISABLE_NOTIFICATIONS']))
+    dp.add_handler(CallbackQueryHandler(handlers.change_language_callback, settings.CALLBACK_DATA_REGEX['CHANGE_LANGUAGE']))
+    dp.add_handler(CallbackQueryHandler(handlers.pick_language_callback, settings.CALLBACK_DATA_REGEX['PICK_LANGUAGE']))
+    dp.add_handler(CallbackQueryHandler(handlers.send_stats_callback, settings.CALLBACK_DATA_REGEX['SEND_STATS']))
+    dp.add_handler(CallbackQueryHandler(handlers.invite_message_callback, settings.CALLBACK_DATA_REGEX['INVITE_MESSAGE']))
+
+    dp.add_handler(InlineQueryHandler(handlers.inline_query_handler))
+
+    dp.add_handler(MessageHandler(Filters.status_update.chat_created, handlers.chat_created_handler))
+    dp.add_handler(MessageHandler(Filters.status_update.new_chat_members, handlers.new_chat_members_handler))
+    dp.add_handler(MessageHandler(Filters.status_update.left_chat_member, handlers.left_chat_member_handler))
 
     updater.start_polling()
 
