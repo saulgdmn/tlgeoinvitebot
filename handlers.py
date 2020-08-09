@@ -39,8 +39,8 @@ def pick_chat_callback(update: Update, context: CallbackContext):
         log.info('pick_chat_callback chat not founded: {}'.format(chat_id))
         return
 
-    update.effective_message.edit_reply_markup(text=format_chat_settings_message(chat),
-                                               reply_markup=generate_chat_settings_markup(chat))
+    update.effective_message.edit_text(text=format_chat_settings_message(chat))
+    update.effective_message.edit_reply_markup(reply_markup=generate_chat_settings_markup(chat))
 
 
 def enable_chat_callback(update: Update, context: CallbackContext):
