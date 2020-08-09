@@ -175,6 +175,7 @@ def send_stats_callback(update: Update, context: CallbackContext):
 
     markup = InlineKeyboardMarkup([[InlineKeyboardButton(text='Try now!', switch_inline_query='')]])
     context.bot.send_message(text=formatted_chat_stats, chat_id=chat_id, parse_mode='HTML', reply_markup=markup)
+    update.callback_query.answer('OK')
 
 
 def settings_back_callback(update: Update, context: CallbackContext):
