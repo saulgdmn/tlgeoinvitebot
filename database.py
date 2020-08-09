@@ -71,6 +71,9 @@ class SpectatedChat(BaseModel):
         else:
             query = SpectatedChat.select().where(SpectatedChat.enabled == enabled)
 
+        print(query)
+        print(query.count)
+
         if query.count == 0:
             return None
 
