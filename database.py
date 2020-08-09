@@ -67,9 +67,9 @@ class SpectatedChat(BaseModel):
 
     def get_list(enabled=None):
         if enabled is None:
-            return SpectatedChat.select()
-
-        query = SpectatedChat.select().where(SpectatedChat.enabled == enabled)
+            query = SpectatedChat.select()
+        else:
+            query = SpectatedChat.select().where(SpectatedChat.enabled == enabled)
 
         if query.count == 0:
             return None
