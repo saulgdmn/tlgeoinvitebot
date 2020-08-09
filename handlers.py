@@ -198,12 +198,13 @@ def inline_query_handler(update: Update, context: CallbackContext):
         if is_member(bot=bot, chat_id=chat.chat_id, user_id=query.from_user.id) is False:
             continue
 
-
-        payload = settings.CALLBACK_DATA_PATTERNS['DEEP_LINKING_LINK'].\
-            format(chat_id=chat.chat_id, user_id=query.from_user.id)
+        deep_linking_link = 'https://t.me/{}?start={}'.\
+            format(settings.BOT_USERNAME,
+                   settings.CALLBACK_DATA_PATTERNS['DEEP_LINKING_LINK'].
+                   format(chat_id=chat.chat_id, user_id=query.from_user.id))
 
         # generate keyboard markup with a referral button
-        markup = InlineKeyboardMarkup([[InlineKeyboardButton(text='Interested!', callback_data=payload)]])
+        markup = InlineKeyboardMarkup([[InlineKeyboardButton(text='Interested!', callback_data=deep_linking_link)]])
 
         results.append(InlineQueryResultArticle(
             id=uuid4(),
