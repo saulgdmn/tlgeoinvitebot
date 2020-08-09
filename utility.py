@@ -109,10 +109,10 @@ def generate_services_markup(chat=None):
 
     if chat:
         buttons.append(
-            InlineKeyboardButton(text='Try now', url=settings.GEO_WEB_LINK, switch_inline_query=chat.title))
+            InlineKeyboardButton(text='Try now', switch_inline_query=chat.title))
     else:
         buttons.append(
-            InlineKeyboardButton(text='Try now', url=settings.GEO_WEB_LINK, switch_inline_query=''))
+            InlineKeyboardButton(text='Try now', switch_inline_query=''))
 
     buttons.append(InlineKeyboardButton(text='Visit website', url=settings.GEO_WEB_LINK))
     buttons.append(InlineKeyboardButton(text='Download app', url=settings.GEO_APP_LINK))
