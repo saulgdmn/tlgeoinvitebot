@@ -54,14 +54,12 @@ def main():
                                         pattern=settings.CALLBACK_DATA_REGEX['SETTINGS_BACK']))
     dp.add_handler(CallbackQueryHandler(callback=handlers.pick_language_callback,
                                         pattern=settings.CALLBACK_DATA_REGEX['PICK_LANGUAGE']))
-    #dp.add_handler(CallbackQueryHandler(callback=handlers.invite_message_callback,
-    #                                    pattern=settings.CALLBACK_DATA_REGEX['INVITE_MESSAGE']))
 
     dp.add_handler(InlineQueryHandler(handlers.inline_query_handler))
 
     dp.add_handler(MessageHandler(Filters.status_update.chat_created, handlers.chat_created_handler))
     dp.add_handler(MessageHandler(Filters.status_update.new_chat_members, handlers.new_chat_members_handler))
-    dp.add_handler(MessageHandler(Filters.status_update.left_chat_member, handlers.left_chat_member_handler))
+    #dp.add_handler(MessageHandler(Filters.status_update.left_chat_member, handlers.left_chat_member_handler))
 
     database.database_startup()
 
