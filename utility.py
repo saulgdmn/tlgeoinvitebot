@@ -71,7 +71,7 @@ def administrators_only(func):
     return wrapped
 
 
-def format_chat_stats(bot, chat: SpectatedChat, top):
+def format_chat_stats(bot, chat: SpectatedChat, top=10):
     """Return a formatted string of user referral statistic"""
 
     user_stats = chat.retrieve_referral_records()[:top]
