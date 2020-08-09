@@ -204,7 +204,7 @@ def inline_query_handler(update: Update, context: CallbackContext):
                    format(chat_id=chat.chat_id, user_id=query.from_user.id))
 
         # generate keyboard markup with a referral button
-        markup = InlineKeyboardMarkup([[InlineKeyboardButton(text='Interested!', callback_data=deep_linking_link)]])
+        markup = InlineKeyboardMarkup([[InlineKeyboardButton(text='Interested!', url=deep_linking_link)]])
 
         results.append(InlineQueryResultArticle(
             id=uuid4(),
