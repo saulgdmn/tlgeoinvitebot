@@ -23,13 +23,13 @@ CALLBACK_DATA_PATTERNS = {
 }
 
 CALLBACK_DATA_REGEX = {
-    'PICK_CHAT': r'^pcht_(?<chat_id>[\-\d]+)$',
-    'ENABLE_CHAT': r'^echt_(?<chat_id>[\-\d]+)$',
-    'DISABLE_CHAT': r'^dcht_(?<chat_id>[\-\d]+)$',
-    'ENABLE_NOTIFICATIONS': r'^entf_(?<chat_id>[\-\d]+)$',
-    'DISABLE_NOTIFICATIONS': r'^dntf_(?<chat_id>[\-\d]+)$',
-    'CHANGE_LANGUAGE': r'^clng_(?<chat_id>[\-\d]+)$',
-    'PICK_LANGUAGE': r'^plng_(?<chat_id>[\-\d]+)_(?<language_shortcut>[\-a-z]+)$',
-    'SEND_STATS': r'^ssts_(?<chat_id>[\-\d]+)$',
-    'INVITE_MESSAGE': r'^imsg_(?<chat_id>[\-\d]+)_(?<user_id>[\-\d]+)$'
+    'PICK_CHAT': r'^pcht_(?P<chat_id>[\-\d]+)$',
+    'ENABLE_CHAT': r'^echt_(?P<chat_id>[\-\d]+)$',
+    'DISABLE_CHAT': r'^dcht_(?P<chat_id>[\-\d]+)$',
+    'ENABLE_NOTIFICATIONS': r'^entf_(?P<chat_id>[\-\d]+)$',
+    'DISABLE_NOTIFICATIONS': r'^dntf_(?P<chat_id>[\-\d]+)$',
+    'CHANGE_LANGUAGE': r'^clng_(?P<chat_id>[\-\d]+)$',
+    'PICK_LANGUAGE': r'^plng_(?P<chat_id>[\-\d]+)_(?P<language_shortcut>[\-a-z]+)$',
+    'SEND_STATS': r'^ssts_(?P<chat_id>[\-\d]+)$',
+    'INVITE_MESSAGE': r'^imsg_(?P<chat_id>[\-\d]+)_(?P<user_id>[\-\d]+)$'
 }
