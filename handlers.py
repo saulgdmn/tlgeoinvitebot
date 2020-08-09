@@ -231,7 +231,7 @@ def new_chat_members_handler(update: Update, context: CallbackContext):
 
     log.info('New new_chat_members message: {}'.format(message))
 
-    if bot.id in [member.user.id for member in message.new_chat_members]:
+    if bot.id in [user.id for user in message.new_chat_members]:
         if has_admin(chat.id):
             SpectatedChat.add_to_spectated(chat_id=chat.id, title=chat.title)
             log.info('Add new spectated chat: {}'.format(chat))
