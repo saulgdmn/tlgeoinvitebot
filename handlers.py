@@ -12,10 +12,40 @@ from database import SpectatedChat, ReferralRecord
 
 
 def start_command(update: Update, context: CallbackContext):
-    """Handle the command /help issued in private chat."""
+    """Handle the command /start issued in private chat."""
 
-    markup = InlineKeyboardMarkup([[InlineKeyboardButton(text='Try now!', switch_inline_query='')]])
-    update.effective_chat.send_message(text='start_message', reply_markup=markup, parse_mode='HTML')
+    update.effective_chat.send_message(text=get_lang('en').get('start_message'), parse_mode='HTML',
+                                       reply_markup=generate_services_markup())
+
+
+def start_deeplinking_command(update: Update, context: CallbackContext):
+    """Handle the command /start issued in private chat."""
+
+    bot = context.bot
+    query = update.callback_query
+    invited_chat_id = context.match.groupdict().get('chat_id', None)
+    from_user = context.match.groupdict().get('user_id', None)
+    to_user = query.from_user.id
+
+    # check if inviting user is an invited user
+    if from_user == to_user:
+        update.effective_chat.send_message(text='You can\'t invite yourself to the chat :)')
+        return
+
+    # check if an invited user is already a member of the chat
+    if is_member(bot=bot, chat_id=invited_chat_id, user_id=to_user):
+        update.effective_chat.send_message(text='You\'re already a member of the chat!')
+        return
+
+    # check if a user referral record for an invited user is already exists
+    # and create if not
+    record = ReferralRecord.get_by_to_user(chat_id=invited_chat_id, to_user=to_user)
+    if record is None:
+        record = ReferralRecord.add(chat_id=invited_chat_id, from_user=from_user, to_user=to_user)
+
+    invited_chat = SpectatedChat.get_by_chat_id(invited_chat_id)
+    update.effective_chat.send_message(text=get_chat_lang(invited_chat).get('start_invite_message').
+                                       format(chat_title=chat.title))
 
 
 @administrators_only
@@ -168,20 +198,19 @@ def inline_query_handler(update: Update, context: CallbackContext):
         if is_member(bot=bot, chat_id=chat.chat_id, user_id=query.from_user.id) is False:
             continue
 
-        # create referral button callback data
-        # contains 'chat_id' - invited chat_id and 'user_id' - inviting user_id
-        callback_data = settings.CALLBACK_DATA_PATTERNS['INVITE_MESSAGE'].\
+
+        payload = settings.CALLBACK_DATA_PATTERNS['DEEP_LINKING_LINK'].\
             format(chat_id=chat.chat_id, user_id=query.from_user.id)
 
         # generate keyboard markup with a referral button
-        markup = InlineKeyboardMarkup([[InlineKeyboardButton(text='Interested!', callback_data=callback_data)]])
+        markup = InlineKeyboardMarkup([[InlineKeyboardButton(text='Interested!', callback_data=payload)]])
 
         results.append(InlineQueryResultArticle(
             id=uuid4(),
             title=chat.title,
             reply_markup=markup,
             input_message_content=InputTextMessageContent(
-                message_text=get_chat_lang(chat).get('invite_message').format(chat_title=chat.title),
+                message_text=get_chat_lang(chat).get('inline_invite_message').format(chat_title=chat.title),
                 parse_mode='HTML')))
 
     query.answer(results=results, is_personal=True, cache_time=0)
@@ -269,7 +298,9 @@ def new_chat_members_handler(update: Update, context: CallbackContext):
         if user.is_bot:
             continue
 
-        ReferralRecord.get_by_to_user(chat_id=chat.id, to_user=user.id).update_joined_chat(True)
+        record = ReferralRecord.get_by_to_user(chat_id=chat.id, to_user=message.left_chat_member.id)
+        if record:
+            record.update_joined_chat(True)
 
 
 def left_chat_member_handler(update: Update, context: CallbackContext):
@@ -286,7 +317,9 @@ def left_chat_member_handler(update: Update, context: CallbackContext):
         SpectatedChat.get_by_chat_id(chat_id=chat.id).remove_from_spectated()
         return
 
-    ReferralRecord.get_by_to_user(chat_id=chat.id, to_user=message.left_chat_member.id).update_joined_chat(False)
+    record = ReferralRecord.get_by_to_user(chat_id=chat.id, to_user=message.left_chat_member.id)
+    if record:
+        record.update_joined_chat(False)
 
 
 def on_notification_callback(context: CallbackContext):

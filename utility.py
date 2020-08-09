@@ -13,14 +13,14 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 log = logging.getLogger(__name__)
 
 
-def get_chat_lang(chat: SpectatedChat):
+def get_lang(shortcut):
     for lang in settings.LANGUAGES:
-        if chat.language == lang['shortcut']:
+        if lang.shortcut == shortcut:
             return lang
 
-    for lang in settings.LANGUAGES:
-        if chat.language == 'en':
-            return lang
+
+def get_chat_lang(chat: SpectatedChat):
+    return get_lang(chat.language)
 
 
 def load_languages_pack(path='./languages.yaml'):
@@ -78,19 +78,46 @@ def format_chat_stats(bot, chat: SpectatedChat, top=10):
     if user_stats is None:
         return None
 
-    user_stats = user_stats[:top]
-
     formatted_users = []
-    for key, stat in enumerate(user_stats):
+    for key, stat in enumerate(user_stats[:top]):
         user = bot.get_chat_member(chat_id=chat.chat_id, user_id=stat['user_id']).user
 
         formatted_users.append(
-            get_chat_lang(chat).get('user_stat_pattern').format(invited_users_count=stat['invited_users_count'] * 5,
+            get_chat_lang(chat).get('user_stat_pattern').format(user_score=stat['invited_users_count'] * settings.GEO_MULT,
                                                                 user_mention=user.mention_html()))
+
     total_invited_users_count = sum([stat['invited_users_count'] for stat in user_stats])
     return get_chat_lang(chat).get('stats_message').format(chat_title=chat.title,
                                                            formatted_users='\n'.join(formatted_users),
                                                            total_invited_users_count=total_invited_users_count)
+
+
+def format_chat_settings_message(chat: SpectatedChat):
+    chat_settings_message_patt = 'Selected <b>{title}</b>:\n\n' \
+                                 'Status: <b>{status}</b>\n' \
+                                 'Notifications: <b>{notifications}</b>\n' \
+                                 'Language: <b>{language}</b>'
+
+    return chat_settings_message_patt.format(title=chat.title,
+                                             status='enabled' if chat.enabled else 'disabled',
+                                             notifications='enabled' if chat.notifications else 'disabled',
+                                             language=chat.language)
+
+
+def generate_services_markup(chat=None):
+    buttons = []
+
+    if chat:
+        buttons.append(
+            InlineKeyboardButton(text='Try now', url=settings.GEO_WEB_LINK, switch_inline_query=chat.title))
+    else:
+        buttons.append(
+            InlineKeyboardButton(text='Try now', url=settings.GEO_WEB_LINK, switch_inline_query=''))
+
+    buttons.append(InlineKeyboardButton(text='Visit website', url=settings.GEO_WEB_LINK))
+    buttons.append(InlineKeyboardButton(text='Download app', url=settings.GEO_APP_LINK))
+
+    return InlineKeyboardMarkup().from_column(buttons)
 
 
 def generate_chats_markup(chats: [SpectatedChat]):
@@ -110,28 +137,16 @@ def generate_languages_markup(chat: SpectatedChat, languages: [str]):
          for language in languages])
 
 
-def format_chat_settings_message(chat: SpectatedChat):
-    chat_settings_message_patt = 'Selected <b>{title}</b>:\n\n' \
-                                 'Status: <b>{status}</b>\n' \
-                                 'Notifications: <b>{notifications}</b>\n' \
-                                 'Language: <b>{language}</b>'
-
-    return chat_settings_message_patt.format(title=chat.title,
-                                             status='enabled' if chat.enabled else 'disabled',
-                                             notifications='enabled' if chat.notifications else 'disabled',
-                                             language=chat.language)
-
-
 def generate_chat_settings_markup(chat: SpectatedChat):
     buttons = []
 
     if chat.enabled:
         buttons.append(
-            InlineKeyboardButton(text='Disable', callback_data=settings.CALLBACK_DATA_PATTERNS['DISABLE_CHAT'].
+            InlineKeyboardButton(text='Disable chat', callback_data=settings.CALLBACK_DATA_PATTERNS['DISABLE_CHAT'].
                                  format(chat_id=chat.chat_id)))
     else:
         buttons.append(
-            InlineKeyboardButton(text='Enable', callback_data=settings.CALLBACK_DATA_PATTERNS['ENABLE_CHAT'].
+            InlineKeyboardButton(text='Enable chat', callback_data=settings.CALLBACK_DATA_PATTERNS['ENABLE_CHAT'].
                                  format(chat_id=chat.chat_id)))
 
     if chat.notifications:

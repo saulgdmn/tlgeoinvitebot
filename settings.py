@@ -6,9 +6,14 @@ BOT_USERNAME = os.getenv('BOT_USERNAME')
 BOT_API_TOKEN = os.getenv('BOT_API_TOKEN')
 LANGUAGES_PACK_PATH = os.getenv('LANGUAGES_PACK_PATH')
 
+LANGUAGES = utility.load_languages_pack(LANGUAGES_PACK_PATH)
+
 ADMINISTRATOR_IDS = [401042341, 544498153]
 
-LANGUAGES = utility.load_languages_pack(LANGUAGES_PACK_PATH)
+GEO_WEB_LINK = os.getenv('GEO_WEB_LINK')
+GEO_APP_LINK = os.getenv('GEO_APP_LINK')
+
+GEO_MULT = 5
 
 CALLBACK_DATA_PATTERNS = {
     'PICK_CHAT': 'pcht_{chat_id}',
@@ -23,7 +28,7 @@ CALLBACK_DATA_PATTERNS = {
 
     'PICK_LANGUAGE': 'plng_{chat_id}_{language_shortcut}',
 
-    'INVITE_MESSAGE': 'imsg_{chat_id}_{user_id}'
+    'DEEP_LINKING_LINK': 'dlnk_{chat_id}_{user_id}'
 }
 
 CALLBACK_DATA_REGEX = {
@@ -39,5 +44,5 @@ CALLBACK_DATA_REGEX = {
 
     'PICK_LANGUAGE': r'^plng_(?P<chat_id>[\-\d]+)_(?P<language_shortcut>[\-a-z]+)$',
 
-    'INVITE_MESSAGE': r'^imsg_(?P<chat_id>[\-\d]+)_(?P<user_id>[\-\d]+)$'
+    'DEEP_LINKING_LINK': r'^dlnk_(?P<chat_id>[\-\d]+)_(?P<user_id>[\-\d]+)$'
 }
