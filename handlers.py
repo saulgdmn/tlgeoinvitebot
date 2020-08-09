@@ -22,10 +22,10 @@ def start_deeplinking_command(update: Update, context: CallbackContext):
     """Handle the command /start issued in private chat."""
 
     bot = context.bot
-    query = update.callback_query
+    message = update.effective_message
     invited_chat_id = context.match.groupdict().get('chat_id', None)
     from_user = context.match.groupdict().get('user_id', None)
-    to_user = query.from_user.id
+    to_user = message.from_user.id
 
     # check if inviting user is an invited user
     if from_user == to_user:
