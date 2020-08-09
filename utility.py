@@ -147,6 +147,11 @@ def generate_chat_settings_markup(chat: SpectatedChat):
                              format(chat_id=chat.chat_id)))
 
     buttons.append(
+        InlineKeyboardButton(text='Send statistic',
+                             callback_data=settings.CALLBACK_DATA_PATTERNS['SEND_STATS'].
+                             format(chat_id=chat.chat_id)))
+
+    buttons.append(
         InlineKeyboardButton(text='Back to chats',
                              callback_data=settings.CALLBACK_DATA_PATTERNS['SETTINGS_BACK']))
 
