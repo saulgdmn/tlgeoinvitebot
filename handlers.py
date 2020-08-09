@@ -28,7 +28,10 @@ def chats_command_handler(update: Update, context: CallbackContext):
         update.effective_chat.send_message(text='There are no spectated chats!')
         return
 
-    update.effective_chat.send_message(text='Choose a chat.', markup=generate_chats_markup(chats))
+    markup = generate_chats_markup(chats)
+    print(markup)
+
+    update.effective_chat.send_message(text='Choose a chat.', markup=markup)
 
 
 def pick_chat_callback(update: Update, context: CallbackContext):
