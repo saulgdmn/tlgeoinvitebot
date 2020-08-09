@@ -65,7 +65,7 @@ class SpectatedChat(BaseModel):
         results.sort(key=lambda x: x['invited_users_count'], reverse=True)
         return results
 
-    def get_list(enabled=None):
+    def get_chats_list(enabled=None):
         if enabled is None:
             query = SpectatedChat.select()
         else:

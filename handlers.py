@@ -22,7 +22,7 @@ def start_command(update: Update, context: CallbackContext):
 def chats_command_handler(update: Update, context: CallbackContext):
     """Handle the command /chats issued in a private chat."""
 
-    chats = SpectatedChat.get_list()
+    chats = SpectatedChat.get_chats_list()
     log.info(chats)
     if chats is None:
         update.effective_chat.send_message(text='There are no spectated chats!')
@@ -138,7 +138,7 @@ def inline_query_handler(update: Update, context: CallbackContext):
     query = update.inline_query
 
     results = []
-    for chat in SpectatedChat.get_list(enabled=True):
+    for chat in SpectatedChat.get_chats_list(enabled=True):
 
         if query.query not in chat.title:
             continue
@@ -213,7 +213,7 @@ def chat_created_handler(update: Update, context: CallbackContext):
 
     chat = update.effective_chat
 
-    if has_admin(bot, chat.id):
+    if has_admin(context.bot, chat.id):
         SpectatedChat.add_to_spectated(chat_id=chat.id, title=chat.title)
         log.info('Add new spectated chat: {}'.format(chat))
         return
@@ -270,7 +270,7 @@ def left_chat_member_handler(update: Update, context: CallbackContext):
 
 def on_notification_callback(context: CallbackContext):
 
-    for chat in SpectatedChat.get_list(enabled=True):
+    for chat in SpectatedChat.get_chats_list(enabled=True):
         markup = InlineKeyboardMarkup([[InlineKeyboardButton(text='Try now!', switch_inline_query='')]])
         context.bot.send_message(chat_id=chat.chat_id, text=get_chat_lang(chat).get('notification_message'),
                                  reply_markup=markup, parse_mode='HTML')
