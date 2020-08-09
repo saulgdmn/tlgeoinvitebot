@@ -90,20 +90,20 @@ def format_chat_stats(bot, chat: SpectatedChat, top):
 
 
 def generate_chats_markup(chats: [SpectatedChat]):
-    return InlineKeyboardMarkup([
+    return InlineKeyboardMarkup.from_column(
         [InlineKeyboardButton(text=chat.title,
                               callback_data=settings.CALLBACK_DATA_PATTERNS['PICK_CHAT'].
                               format(chat_id=chat.chat_id))
-         for chat in chats]])
+         for chat in chats])
 
 
 def generate_languages_markup(chat: SpectatedChat, languages: [str]):
-    return InlineKeyboardMarkup([
+    return InlineKeyboardMarkup.from_column(
         [InlineKeyboardButton(text=language['name'],
                               callback_data=settings.CALLBACK_DATA_PATTERNS['PICK_LANGUAGE'].
                               format(chat_id=chat.chat_id,
                                      language_shortcut=language['shortcut']))
-         for language in languages]])
+         for language in languages])
 
 
 def format_chat_settings_message(chat: SpectatedChat):
@@ -146,5 +146,4 @@ def generate_chat_settings_markup(chat: SpectatedChat):
                              callback_data=settings.CALLBACK_DATA_PATTERNS['CHANGE_LANGUAGE'].
                              format(chat_id=chat.chat_id)))
 
-
-    return InlineKeyboardMarkup([buttons])
+    return InlineKeyboardMarkup.from_column(buttons)

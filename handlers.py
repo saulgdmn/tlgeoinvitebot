@@ -39,8 +39,8 @@ def pick_chat_callback(update: Update, context: CallbackContext):
         log.info('pick_chat_callback chat not founded: {}'.format(chat_id))
         return
 
-    update.effective_message.edit_text(text=format_chat_settings_message(chat), parse_mode='HTML')
-    update.effective_message.edit_reply_markup(reply_markup=generate_chat_settings_markup(chat))
+    update.effective_message.edit_text(text=format_chat_settings_message(chat), parse_mode='HTML',
+                                       reply_markup=generate_chat_settings_markup(chat))
 
 
 def enable_chat_callback(update: Update, context: CallbackContext):
@@ -51,8 +51,8 @@ def enable_chat_callback(update: Update, context: CallbackContext):
         return
 
     chat.update_enabled(True)
-    update.effective_message.edit_text(text=format_chat_settings_message(chat), parse_mode='HTML')
-    update.effective_message.edit_reply_markup(reply_markup=generate_chat_settings_markup(chat))
+    update.effective_message.edit_text(text=format_chat_settings_message(chat), parse_mode='HTML',
+                                       reply_markup=generate_chat_settings_markup(chat))
 
 
 def disable_chat_callback(update: Update, context: CallbackContext):
@@ -63,8 +63,8 @@ def disable_chat_callback(update: Update, context: CallbackContext):
         return
 
     chat.update_enabled(False)
-    update.effective_message.edit_text(text=format_chat_settings_message(chat), parse_mode='HTML')
-    update.effective_message.edit_reply_markup(reply_markup=generate_chat_settings_markup(chat))
+    update.effective_message.edit_text(text=format_chat_settings_message(chat), parse_mode='HTML',
+                                       reply_markup=generate_chat_settings_markup(chat))
 
 
 def enable_notifications_callback(update: Update, context: CallbackContext):
@@ -75,8 +75,8 @@ def enable_notifications_callback(update: Update, context: CallbackContext):
         return
 
     chat.update_notifications(True)
-    update.effective_message.edit_text(text=format_chat_settings_message(chat), parse_mode='HTML')
-    update.effective_message.edit_reply_markup(reply_markup=generate_chat_settings_markup(chat))
+    update.effective_message.edit_text(text=format_chat_settings_message(chat), parse_mode='HTML',
+                                       reply_markup=generate_chat_settings_markup(chat))
 
 
 def disable_notifications_callback(update: Update, context: CallbackContext):
@@ -87,8 +87,8 @@ def disable_notifications_callback(update: Update, context: CallbackContext):
         return
 
     chat.update_notifications(False)
-    update.effective_message.edit_text(text=format_chat_settings_message(chat), parse_mode='HTML')
-    update.effective_message.edit_reply_markup(reply_markup=generate_chat_settings_markup(chat))
+    update.effective_message.edit_text(text=format_chat_settings_message(chat), parse_mode='HTML',
+                                       reply_markup=generate_chat_settings_markup(chat))
 
 
 def change_language_callback(update: Update, context: CallbackContext):
@@ -97,8 +97,9 @@ def change_language_callback(update: Update, context: CallbackContext):
     if chat is None:
         log.info('change_language_callback chat not founded: {}'.format(chat_id))
         return
-    update.effective_message.edit_text(text='Choose a language.', parse_mode='HTML')
-    update.effective_message.edit_reply_markup(reply_markup=generate_languages_markup(chat, settings.LANGUAGES))
+
+    update.effective_message.edit_text(text='Choose a language.', parse_mode='HTML',
+                                       reply_markup=generate_languages_markup(chat, settings.LANGUAGES))
 
 
 def pick_language_callback(update: Update, context: CallbackContext):
@@ -112,8 +113,8 @@ def pick_language_callback(update: Update, context: CallbackContext):
     language = context.match.groupdict().get('language_shortcut', 'en')
     chat.update_language(language)
 
-    update.effective_message.edit_text(text=format_chat_settings_message(chat), parse_mode='HTML')
-    update.effective_message.edit_reply_markup(reply_markup=generate_chat_settings_markup(chat))
+    update.effective_message.edit_text(text=format_chat_settings_message(chat), parse_mode='HTML',
+                                       reply_markup=generate_chat_settings_markup(chat))
 
 
 def send_stats_callback(update: Update, context: CallbackContext):
