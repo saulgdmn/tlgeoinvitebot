@@ -213,7 +213,7 @@ def chat_created_handler(update: Update, context: CallbackContext):
 
     chat = update.effective_chat
 
-    if has_admin(chat.id):
+    if has_admin(bot, chat.id):
         SpectatedChat.add_to_spectated(chat_id=chat.id, title=chat.title)
         log.info('Add new spectated chat: {}'.format(chat))
         return
@@ -232,7 +232,7 @@ def new_chat_members_handler(update: Update, context: CallbackContext):
     log.info('New new_chat_members message: {}'.format(message))
 
     if bot.id in [user.id for user in message.new_chat_members]:
-        if has_admin(chat.id):
+        if has_admin(bot, chat.id):
             SpectatedChat.add_to_spectated(chat_id=chat.id, title=chat.title)
             log.info('Add new spectated chat: {}'.format(chat))
             return
