@@ -44,8 +44,11 @@ def start_deeplinking_command(update: Update, context: CallbackContext):
         record = ReferralRecord.add(chat_id=invited_chat_id, from_user=from_user, to_user=to_user)
 
     invited_chat = SpectatedChat.get_by_chat_id(invited_chat_id)
+
+    markup = InlineKeyboardMarkup([[InlineKeyboardButton(text='Join now!', url=invited_chat.invite_link)]])
     update.effective_chat.send_message(text=get_chat_lang(invited_chat).get('start_invite_message').
-                                       format(chat_title=chat.title))
+                                       format(chat_title=invited_chat.title),
+                                       reply_markup=markup)
 
 
 @administrators_only
