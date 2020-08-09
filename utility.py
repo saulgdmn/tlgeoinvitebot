@@ -130,7 +130,7 @@ def generate_chat_settings_markup(chat: SpectatedChat):
             InlineKeyboardButton(text='Enable', callback_data=settings.CALLBACK_DATA_PATTERNS['ENABLE_CHAT'].
                                  format(chat_id=chat.chat_id)))
 
-    if chat.enabled:
+    if chat.notifications:
         buttons.append(
             InlineKeyboardButton(text='Disable notifications',
                                  callback_data=settings.CALLBACK_DATA_PATTERNS['DISABLE_NOTIFICATIONS'].
