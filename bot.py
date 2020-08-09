@@ -53,8 +53,8 @@ def main():
                                         pattern=settings.CALLBACK_DATA_REGEX['SETTINGS_BACK']))
     dp.add_handler(CallbackQueryHandler(callback=handlers.pick_language_callback,
                                         pattern=settings.CALLBACK_DATA_REGEX['PICK_LANGUAGE']))
-    dp.add_handler(CallbackQueryHandler(callback=handlers.invite_message_callback,
-                                        pattern=settings.CALLBACK_DATA_REGEX['INVITE_MESSAGE']))
+    #dp.add_handler(CallbackQueryHandler(callback=handlers.invite_message_callback,
+    #                                    pattern=settings.CALLBACK_DATA_REGEX['INVITE_MESSAGE']))
 
     dp.add_handler(InlineQueryHandler(handlers.inline_query_handler))
 
