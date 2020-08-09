@@ -33,6 +33,7 @@ def main():
     dp.add_handler(CommandHandler(command="start",
                                   callback=handlers.start_command,
                                   filters=Filters.private))
+
     dp.add_handler(CommandHandler("chats", handlers.chats_command_handler, filters=Filters.private))
 
     dp.add_handler(CallbackQueryHandler(callback=handlers.pick_chat_callback,

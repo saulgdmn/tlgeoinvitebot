@@ -44,5 +44,5 @@ CALLBACK_DATA_REGEX = {
 
     'PICK_LANGUAGE': r'^plng_(?P<chat_id>[\-\d]+)_(?P<language_shortcut>[\-a-z]+)$',
 
-    'DEEP_LINKING_LINK': r'^dlnk_(?P<chat_id>[\-\d]+)_(?P<user_id>[\-\d]+)$'
+    'DEEP_LINKING_LINK': r'^\/start dlnk_(?P<chat_id>[\-\d]+)_(?P<user_id>[\-\d]+)$'
 }
