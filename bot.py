@@ -7,6 +7,7 @@ from telegram.ext import Updater, CommandHandler, InlineQueryHandler, CallbackQu
 import handlers
 import settings
 import utility
+import database
 
 from utility import log
 
@@ -19,6 +20,7 @@ def main():
     # Make sure to set use_context=True to use the new context based callbacks
     # Post version 12 this will no longer be necessary
     updater = Updater(token=settings.BOT_API_TOKEN, use_context=True)
+
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
@@ -43,6 +45,8 @@ def main():
     dp.add_handler(MessageHandler(Filters.status_update.new_chat_members, handlers.new_chat_members_handler))
     dp.add_handler(MessageHandler(Filters.status_update.left_chat_member, handlers.left_chat_member_handler))
 
+    database.database_startup()
+
     updater.start_polling()
 
     """
@@ -55,7 +59,7 @@ def main():
 
     """
     updater.idle()
-
+    database.database_closeup()
 
 if __name__ == '__main__':
     main()
