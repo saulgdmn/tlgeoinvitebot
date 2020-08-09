@@ -31,7 +31,7 @@ def main():
                                   filters=Filters.private &
                                           Filters.regex(settings.CALLBACK_DATA_REGEX['DEEP_LINKING_LINK'])))
     dp.add_handler(CommandHandler(command="start",
-                                  callback=handlers.start_command,
+                                  callback=handlers.start_deeplinking_command,
                                   filters=Filters.private))
     dp.add_handler(CommandHandler("chats", handlers.chats_command_handler, filters=Filters.private))
 
