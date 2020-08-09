@@ -55,6 +55,11 @@ def enable_chat_callback(update: Update, context: CallbackContext):
                                      show_alert=True)
         return
 
+    invite_link = context.bot.get_chat(chat.chat_id).link
+    if invite_link is None:
+        invite_link = context.bot.export_chat_invite_link(chat_id=chat.chat_id)
+
+    chat.update_invite_link(invite_link)
     chat.update_enabled(True)
     update.effective_message.edit_text(text=format_chat_settings_message(chat), parse_mode='HTML',
                                        reply_markup=generate_chat_settings_markup(chat))
