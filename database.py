@@ -71,9 +71,6 @@ class SpectatedChat(BaseModel):
         else:
             query = SpectatedChat.select().where(SpectatedChat.enabled == enabled)
 
-        print(query)
-        print(query.count())
-
         if query.count() == 0:
             return None
 
@@ -83,6 +80,7 @@ class SpectatedChat(BaseModel):
         return SpectatedChat.get_or_none(SpectatedChat.title == title)
 
     def get_by_chat_id(chat_id):
+        print('>>>>>>>>>>>>> {}'.format(chat_id))
         return SpectatedChat.get_or_none(SpectatedChat.chat_id == chat_id)
 
     def update_invite_link(self, invite_link=None):
