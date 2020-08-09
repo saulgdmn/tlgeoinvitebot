@@ -28,10 +28,7 @@ def chats_command_handler(update: Update, context: CallbackContext):
         update.effective_chat.send_message(text='There are no spectated chats!')
         return
 
-    markup = generate_chats_markup(chats)
-    print(markup)
-
-    update.effective_chat.send_message(text='Choose a chat.', markup=markup)
+    update.effective_chat.send_message(text='Choose a chat.', reply_markup=generate_chats_markup(chats))
 
 
 def pick_chat_callback(update: Update, context: CallbackContext):
@@ -43,7 +40,7 @@ def pick_chat_callback(update: Update, context: CallbackContext):
         return
 
     update.effective_message.edit_reply_markup(text=format_chat_settings_message(chat),
-                                               markup=generate_chat_settings_markup(chat))
+                                               reply_markup=generate_chat_settings_markup(chat))
 
 
 def enable_chat_callback(update: Update, context: CallbackContext):
@@ -55,7 +52,7 @@ def enable_chat_callback(update: Update, context: CallbackContext):
 
     chat.update_enabled(True)
     update.effective_message.edit_reply_markup(text=format_chat_settings_message(chat),
-                                               markup=generate_chat_settings_markup(chat))
+                                               reply_markup=generate_chat_settings_markup(chat))
 
 
 def disable_chat_callback(update: Update, context: CallbackContext):
@@ -67,7 +64,7 @@ def disable_chat_callback(update: Update, context: CallbackContext):
 
     chat.update_enabled(False)
     update.effective_message.edit_reply_markup(text=format_chat_settings_message(chat),
-                                               markup=generate_chat_settings_markup(chat))
+                                               reply_markup=generate_chat_settings_markup(chat))
 
 
 def enable_notifications_callback(update: Update, context: CallbackContext):
@@ -79,7 +76,7 @@ def enable_notifications_callback(update: Update, context: CallbackContext):
 
     chat.update_notifications(True)
     update.effective_message.edit_reply_markup(text=format_chat_settings_message(chat),
-                                               markup=generate_chat_settings_markup(chat))
+                                               reply_markup=generate_chat_settings_markup(chat))
 
 
 def disable_notifications_callback(update: Update, context: CallbackContext):
@@ -91,7 +88,7 @@ def disable_notifications_callback(update: Update, context: CallbackContext):
 
     chat.update_notifications(False)
     update.effective_message.edit_reply_markup(text=format_chat_settings_message(chat),
-                                               markup=generate_chat_settings_markup(chat))
+                                               reply_markup=generate_chat_settings_markup(chat))
 
 
 def change_language_callback(update: Update, context: CallbackContext):
@@ -102,7 +99,7 @@ def change_language_callback(update: Update, context: CallbackContext):
         return
 
     update.effective_message.edit_reply_markup(text='Choose a language.',
-                                               markup=generate_languages_markup(chat, settings.LANGUAGES))
+                                               reply_markup=generate_languages_markup(chat, settings.LANGUAGES))
 
 
 def pick_language_callback(update: Update, context: CallbackContext):
@@ -117,7 +114,7 @@ def pick_language_callback(update: Update, context: CallbackContext):
     chat.update_language(language)
 
     update.effective_message.edit_reply_markup(text=format_chat_settings_message(chat),
-                                               markup=generate_chat_settings_markup(chat))
+                                               reply_markup=generate_chat_settings_markup(chat))
 
 
 def send_stats_callback(update: Update, context: CallbackContext):
