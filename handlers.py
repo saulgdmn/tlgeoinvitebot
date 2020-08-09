@@ -98,7 +98,7 @@ def change_language_callback(update: Update, context: CallbackContext):
         log.info('change_language_callback chat not founded: {}'.format(chat_id))
         return
 
-    update.effective_message.edit_text(text='Choose a language.', parse_mode='HTML',
+    update.effective_message.edit_text(text='Choose a language for <b>{chat_title}</b>'.format(chat_title=chat.title), parse_mode='HTML',
                                        reply_markup=generate_languages_markup(chat, settings.LANGUAGES))
 
 

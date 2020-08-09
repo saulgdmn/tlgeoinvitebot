@@ -142,7 +142,7 @@ def generate_chat_settings_markup(chat: SpectatedChat):
                                  format(chat_id=chat.chat_id)))
 
     buttons.append(
-        InlineKeyboardButton(text='Language',
+        InlineKeyboardButton(text='Change a language',
                              callback_data=settings.CALLBACK_DATA_PATTERNS['CHANGE_LANGUAGE'].
                              format(chat_id=chat.chat_id)))
 
