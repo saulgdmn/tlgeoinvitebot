@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 
 def get_lang(shortcut):
     for lang in settings.LANGUAGES:
-        if lang.shortcut == shortcut:
+        if lang['shortcut'] == shortcut:
             return lang
 
 
