@@ -130,10 +130,10 @@ class ReferralRecord(BaseModel):
         return ReferralRecord.create(chat_id=chat_id, from_user=from_user, to_user=to_user,
                                      date=datetime.datetime.now(), joined_chat=False)
 
-    def get(chat_id, to_user):
+    def get_by_to_user(chat_id, to_user):
         return ReferralRecord.get_or_none(ReferralRecord.chat_id == chat_id, ReferralRecord.to_user == to_user)
 
-    def get(chat_id, from_user):
+    def get_by_from_user(chat_id, from_user):
         return ReferralRecord.get_or_none(ReferralRecord.chat_id == chat_id, ReferralRecord.from_user == from_user)
 
     def update_joined_chat(self, joined_chat=False):

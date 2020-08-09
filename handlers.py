@@ -192,7 +192,7 @@ def invite_message_callback(update: Update, context: CallbackContext):
 
     # check if a user referral record for an invited user is already exists
     # and create if not
-    record = ReferralRecord.get(chat_id=invited_chat_id, to_user=to_user)
+    record = ReferralRecord.get_by_to_user(chat_id=invited_chat_id, to_user=to_user)
     if record is None:
         record = ReferralRecord.add(chat_id=invited_chat_id, from_user=from_user, to_user=to_user)
 
@@ -248,7 +248,7 @@ def new_chat_members_handler(update: Update, context: CallbackContext):
         if user.is_bot:
             continue
 
-        ReferralRecord.get(chat_id=chat.id, to_user=user.id).update_joined_chat(True)
+        ReferralRecord.get_by_to_user(chat_id=chat.id, to_user=user.id).update_joined_chat(True)
 
 
 def left_chat_member_handler(update: Update, context: CallbackContext):
@@ -265,7 +265,7 @@ def left_chat_member_handler(update: Update, context: CallbackContext):
         SpectatedChat.get_by_chat_id(chat_id=chat.id).remove_from_spectated()
         return
 
-    ReferralRecord.get(chat_id=chat.id, to_user=message.left_chat_member.id).update_joined_chat(False)
+    ReferralRecord.get_by_to_user(chat_id=chat.id, to_user=message.left_chat_member.id).update_joined_chat(False)
 
 
 def on_notification_callback(context: CallbackContext):
