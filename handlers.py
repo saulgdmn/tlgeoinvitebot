@@ -141,7 +141,7 @@ def send_stats_callback(update: Update, context: CallbackContext):
 def settings_back_callback(update: Update, context: CallbackContext):
 
     chats = SpectatedChat.get_chats_list()
-    update.effective_message.edit_message(text='Choose a chat.', reply_markup=generate_chats_markup(chats))
+    update.effective_message.edit_text(text='Choose a chat.', reply_markup=generate_chats_markup(chats))
 
 
 def inline_query_handler(update: Update, context: CallbackContext):
