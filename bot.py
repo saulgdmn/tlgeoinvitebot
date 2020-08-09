@@ -29,15 +29,26 @@ def main():
     dp.add_handler(CommandHandler("start", handlers.start_command, filters=Filters.private))
     dp.add_handler(CommandHandler("chats", handlers.chats_command_handler, filters=Filters.private))
 
-    dp.add_handler(CallbackQueryHandler(callback=handlers.pick_chat_callback, pattern=settings.CALLBACK_DATA_REGEX['PICK_CHAT']))
-    dp.add_handler(CallbackQueryHandler(callback=handlers.enable_chat_callback, pattern=settings.CALLBACK_DATA_REGEX['ENABLE_CHAT']))
-    dp.add_handler(CallbackQueryHandler(callback=handlers.disable_chat_callback, pattern=settings.CALLBACK_DATA_REGEX['DISABLE_CHAT']))
-    dp.add_handler(CallbackQueryHandler(callback=handlers.enable_notifications_callback, pattern=settings.CALLBACK_DATA_REGEX['ENABLE_NOTIFICATIONS']))
-    dp.add_handler(CallbackQueryHandler(callback=handlers.disable_notifications_callback, pattern=settings.CALLBACK_DATA_REGEX['DISABLE_NOTIFICATIONS']))
-    dp.add_handler(CallbackQueryHandler(callback=handlers.change_language_callback, pattern=settings.CALLBACK_DATA_REGEX['CHANGE_LANGUAGE']))
-    dp.add_handler(CallbackQueryHandler(callback=handlers.pick_language_callback, pattern=settings.CALLBACK_DATA_REGEX['PICK_LANGUAGE']))
-    dp.add_handler(CallbackQueryHandler(callback=handlers.send_stats_callback, pattern=settings.CALLBACK_DATA_REGEX['SEND_STATS']))
-    dp.add_handler(CallbackQueryHandler(callback=handlers.invite_message_callback, pattern=settings.CALLBACK_DATA_REGEX['INVITE_MESSAGE']))
+    dp.add_handler(CallbackQueryHandler(callback=handlers.pick_chat_callback,
+                                        pattern=settings.CALLBACK_DATA_REGEX['PICK_CHAT']))
+    dp.add_handler(CallbackQueryHandler(callback=handlers.enable_chat_callback,
+                                        pattern=settings.CALLBACK_DATA_REGEX['ENABLE_CHAT']))
+    dp.add_handler(CallbackQueryHandler(callback=handlers.disable_chat_callback,
+                                        pattern=settings.CALLBACK_DATA_REGEX['DISABLE_CHAT']))
+    dp.add_handler(CallbackQueryHandler(callback=handlers.enable_notifications_callback,
+                                        pattern=settings.CALLBACK_DATA_REGEX['ENABLE_NOTIFICATIONS']))
+    dp.add_handler(CallbackQueryHandler(callback=handlers.disable_notifications_callback,
+                                        pattern=settings.CALLBACK_DATA_REGEX['DISABLE_NOTIFICATIONS']))
+    dp.add_handler(CallbackQueryHandler(callback=handlers.change_language_callback,
+                                        pattern=settings.CALLBACK_DATA_REGEX['CHANGE_LANGUAGE']))
+    dp.add_handler(CallbackQueryHandler(callback=handlers.send_stats_callback,
+                                        pattern=settings.CALLBACK_DATA_REGEX['SEND_STATS']))
+    dp.add_handler(CallbackQueryHandler(callback=handlers.pick_language_callback,
+                                        pattern=settings.CALLBACK_DATA_REGEX['SETTINGS_BACK']))
+    dp.add_handler(CallbackQueryHandler(callback=handlers.settings_back_callback,
+                                        pattern=settings.CALLBACK_DATA_REGEX['PICK_LANGUAGE']))
+    dp.add_handler(CallbackQueryHandler(callback=handlers.invite_message_callback,
+                                        pattern=settings.CALLBACK_DATA_REGEX['INVITE_MESSAGE']))
 
     dp.add_handler(InlineQueryHandler(handlers.inline_query_handler))
 
