@@ -303,7 +303,7 @@ def new_chat_members_handler(update: Update, context: CallbackContext):
         if user.is_bot:
             continue
 
-        record = ReferralRecord.get_by_to_user(chat_id=chat.id, to_user=message.left_chat_member.id)
+        record = ReferralRecord.get_by_to_user(chat_id=chat.id, to_user=user.id)
         if record:
             record.update_joined_chat(True)
 
