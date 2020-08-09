@@ -117,7 +117,7 @@ def generate_services_markup(chat=None):
     buttons.append(InlineKeyboardButton(text='Visit website', url=settings.GEO_WEB_LINK))
     buttons.append(InlineKeyboardButton(text='Download app', url=settings.GEO_APP_LINK))
 
-    return InlineKeyboardMarkup().from_column(buttons)
+    return InlineKeyboardMarkup.from_column(buttons)
 
 
 def generate_chats_markup(chats: [SpectatedChat]):
