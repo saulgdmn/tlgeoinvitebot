@@ -134,8 +134,13 @@ def send_stats_callback(update: Update, context: CallbackContext):
         log.info('send_stats_callback chat not founded: {}'.format(chat_id))
         return
 
+    formatted_chat_stats = format_chat_stats(context.bot, chat)
+    if formatted_chat_stats is None:
+        update.callback_query.answer(text='Statistic is not available!', show_alert=True)
+        return
+
     markup = InlineKeyboardMarkup([[InlineKeyboardButton(text='Try now!', switch_inline_query='')]])
-    context.bot.send_message(text=format_chat_stats(context.bot, chat), chat_id=chat_id, reply_markup=markup)
+    context.bot.send_message(text=, chat_id=chat_id, reply_markup=markup)
 
 
 def settings_back_callback(update: Update, context: CallbackContext):

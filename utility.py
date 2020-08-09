@@ -74,7 +74,11 @@ def administrators_only(func):
 def format_chat_stats(bot, chat: SpectatedChat, top=10):
     """Return a formatted string of user referral statistic"""
 
-    user_stats = chat.retrieve_referral_records()[:top]
+    user_stats = chat.retrieve_referral_records()
+    if user_stats is None:
+        return None
+
+    user_stats = user_stats[:top]
 
     formatted_users = []
     for key, stat in enumerate(user_stats):
