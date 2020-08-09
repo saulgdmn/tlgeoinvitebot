@@ -20,4 +20,4 @@
 
     Total count of invited Friends: <b>{total_invited_users_count}</b>
 
-  user_stat_pattern: "{user_mention} - <b>{invited_users_count}</b> invites"
+  user_stat_pattern: "{user_mention} - <b>{invited_users_count}</b> geo"

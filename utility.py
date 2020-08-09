@@ -85,7 +85,7 @@ def format_chat_stats(bot, chat: SpectatedChat, top=10):
         user = bot.get_chat_member(chat_id=chat.chat_id, user_id=stat['user_id']).user
 
         formatted_users.append(
-            get_chat_lang(chat).get('user_stat_pattern').format(invited_users_count=stat['invited_users_count'],
+            get_chat_lang(chat).get('user_stat_pattern').format(invited_users_count=stat['invited_users_count'] * 5,
                                                                 user_mention=user.mention_html()))
     total_invited_users_count = sum([stat['invited_users_count'] for stat in user_stats])
     return get_chat_lang(chat).get('stats_message').format(chat_title=chat.title,
