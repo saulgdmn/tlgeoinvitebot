@@ -59,7 +59,7 @@ def main():
 
     dp.add_handler(MessageHandler(Filters.status_update.chat_created, handlers.chat_created_handler))
     dp.add_handler(MessageHandler(Filters.status_update.new_chat_members, handlers.new_chat_members_handler))
-    #dp.add_handler(MessageHandler(Filters.status_update.left_chat_member, handlers.left_chat_member_handler))
+    dp.add_handler(MessageHandler(Filters.status_update.left_chat_member, handlers.left_chat_member_handler))
 
     database.database_startup()
 
