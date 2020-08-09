@@ -50,6 +50,11 @@ def enable_chat_callback(update: Update, context: CallbackContext):
         log.info('enable_chat_callback chat not founded: {}'.format(chat_id))
         return
 
+    if context.bot.id not in [admin.user.id for admin in context.bot.get_chat_administrators(chat_id=chat.chat_id)]:
+        update.callback_query.answer(text='Not enough rights to export chat invite link.\nPlease, make me an administrator',
+                                     show_alert=True)
+        return
+
     chat.update_enabled(True)
     update.effective_message.edit_text(text=format_chat_settings_message(chat), parse_mode='HTML',
                                        reply_markup=generate_chat_settings_markup(chat))
