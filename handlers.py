@@ -176,13 +176,28 @@ def send_stats_callback(update: Update, context: CallbackContext):
 
     markup = InlineKeyboardMarkup([[InlineKeyboardButton(text='Try now!', switch_inline_query='')]])
     context.bot.send_message(text=formatted_chat_stats, chat_id=chat_id, parse_mode='HTML', reply_markup=markup)
-    update.callback_query.answer('OK')
+    update.callback_query.answer()
 
 
 def settings_back_callback(update: Update, context: CallbackContext):
 
     chats = SpectatedChat.get_chats_list()
     update.effective_message.edit_text(text='Choose a chat.', reply_markup=generate_chats_markup(chats))
+
+
+def generate_ref_link_callback(update: Update, context: CallbackContext):
+
+    chat_id = context.match.groupdict().get('chat_id', None)
+    user_id = context.match.groupdict().get('user_id', None)
+    chat = SpectatedChat.get_by_chat_id(chat_id)
+    if chat is None:
+        log.info('generate_ref_link_callback chat not founded: {}'.format(chat_id))
+        return
+
+    context.bot.send_message(text=get_chat_lang(chat).get('referral_button_reply').
+                             format(referral_link=generate_deep_linking_link(chat_id=chat.chat_id, user_id=user_id)),
+                             chat_id=chat_id, parse_mode='HTML')
+    update.callback_query.answer()
 
 
 def inline_query_handler(update: Update, context: CallbackContext):
@@ -204,13 +219,10 @@ def inline_query_handler(update: Update, context: CallbackContext):
         if is_member(bot=bot, chat_id=chat.chat_id, user_id=query.from_user.id) is False:
             continue
 
-        deep_linking_link = 'https://t.me/{}?start={}'.\
-            format(settings.BOT_USERNAME,
-                   settings.CALLBACK_DATA_PATTERNS['DEEP_LINKING_LINK'].
-                   format(chat_id=chat.chat_id, user_id=query.from_user.id))
-
         # generate keyboard markup with a referral button
-        markup = InlineKeyboardMarkup([[InlineKeyboardButton(text='Interested!', url=deep_linking_link)]])
+        markup = InlineKeyboardMarkup([[
+            InlineKeyboardButton(text='Interested!',
+                                 url=generate_deep_linking_link(chat_id=chat.chat_id, user_id=query.from_user.id))]])
 
         results.append(InlineQueryResultArticle(
             id=uuid4(),
@@ -221,48 +233,6 @@ def inline_query_handler(update: Update, context: CallbackContext):
                 parse_mode='HTML')))
 
     query.answer(results=results, is_personal=True, cache_time=0)
-
-
-def invite_message_callback(update: Update, context: CallbackContext):
-    """
-    Handle the referral button.
-    Creates a UserReferralRecord in a database or uses existed.
-    """
-
-    log.debug('New callback query: {}'.format(update))
-
-    bot = context.bot
-    query = update.callback_query
-    invited_chat_id = context.match.groupdict().get('chat_id', None)
-    from_user = context.match.groupdict().get('user_id', None)
-    to_user = query.from_user.id
-
-    # check if inviting user is an invited user
-    if from_user == to_user:
-        query.answer(text='You can\'t invite yourself to the chat :)')
-        return
-
-    # check if an invited user is already a member of the chat
-    if is_member(bot=bot, chat_id=invited_chat_id, user_id=to_user):
-        query.answer(text='You\'re already a member of the chat!')
-        return
-
-    # check if a user referral record for an invited user is already exists
-    # and create if not
-    record = ReferralRecord.get_by_to_user(chat_id=invited_chat_id, to_user=to_user)
-    if record is None:
-        record = ReferralRecord.add(chat_id=invited_chat_id, from_user=from_user, to_user=to_user)
-
-    log.info("Record: {}".format(record.id))
-
-    invited_chat = SpectatedChat.get_by_chat_id(invited_chat_id)
-
-    # generate a new markup with a 'join button'
-    new_markup = InlineKeyboardMarkup.from_button(
-        InlineKeyboardButton(text='Join now!', url=invited_chat.invite_link))
-
-    query.answer(text='Fine! Click the button and join the channel!')
-    bot.edit_message_reply_markup(inline_message_id=query.inline_message_id, reply_markup=new_markup)
 
 
 def chat_created_handler(update: Update, context: CallbackContext):

@@ -24,6 +24,10 @@
 
     You also able to share an invite link oustside of Telegram. Click 'Referral link' to generate an invite link and shere it with friends!
 
+  referral_button_reply: |
+    Your personal referral link:
+    {referral_link}
+
   inline_invite_message: |
     Hi! You have been invited to <b>{chat_title}</b>.
     Press the button to accept!

@@ -33,6 +33,12 @@ def load_languages_pack(path='./languages.yaml'):
         return None
 
 
+def generate_deep_linking_link(chat_id, user_id):
+    return 'https://t.me/{}?start={}'.format(settings.BOT_USERNAME,
+                                             settings.CALLBACK_DATA_PATTERNS['DEEP_LINKING_LINK'].
+                                            format(chat_id=chat_id, user_id=user_id))
+
+
 def is_admin(bot, chat_id, user_id):
     """Check if user is an administrator"""
 
@@ -104,7 +110,7 @@ def format_chat_settings_message(chat: SpectatedChat):
                                              language=chat.language)
 
 
-def generate_services_markup(chat=None):
+def generate_services_markup(chat=None, user_id=None):
     buttons = []
 
     if chat:
@@ -113,6 +119,12 @@ def generate_services_markup(chat=None):
     else:
         buttons.append(
             InlineKeyboardButton(text='Try now', switch_inline_query=''))
+
+    if chat and user_id:
+        buttons.append(
+            InlineKeyboardButton(text='Referral link',
+                                 callback_data=settings.CALLBACK_DATA_PATTERNS['GENERATE_REF_LINK'].
+                                 format(chat_id=chat.chat_id, user_id=user_id)))
 
     buttons.append(InlineKeyboardButton(text='Visit website', url=settings.GEO_WEB_LINK))
     buttons.append(InlineKeyboardButton(text='Download app', url=settings.GEO_APP_LINK))

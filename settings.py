@@ -28,7 +28,8 @@ CALLBACK_DATA_PATTERNS = {
 
     'PICK_LANGUAGE': 'plng_{chat_id}_{language_shortcut}',
 
-    'DEEP_LINKING_LINK': 'dlnk_{chat_id}_{user_id}'
+    'DEEP_LINKING_LINK': 'dlnk_{chat_id}_{user_id}',
+    'GENERATE_REF_LINK': 'rlnk_{chat_id}_{user_id}'
 }
 
 CALLBACK_DATA_REGEX = {
@@ -44,5 +45,6 @@ CALLBACK_DATA_REGEX = {
 
     'PICK_LANGUAGE': r'^plng_(?P<chat_id>[\-\d]+)_(?P<language_shortcut>[\-a-z]+)$',
 
-    'DEEP_LINKING_LINK': r'^\/start dlnk_(?P<chat_id>[\-\d]+)_(?P<user_id>[\-\d]+)$'
+    'DEEP_LINKING_LINK': r'^\/start dlnk_(?P<chat_id>[\-\d]+)_(?P<user_id>[\-\d]+)$',
+    'GENERATE_REF_LINK': r'^rlnk_(?P<chat_id>[\-\d]+)_(?P<user_id>[\-\d]+)$'
 }
