@@ -196,7 +196,7 @@ def generate_ref_link_callback(update: Update, context: CallbackContext):
 
     update.effective_chat.send_message(text=get_chat_lang(chat).get('referral_button_reply').
                              format(referral_link=generate_deep_linking_link(chat_id=chat.chat_id, user_id=user_id)),
-                             parse_mode='HTML')
+                             parse_mode='HTML', disable_web_page_preview=True)
     update.callback_query.answer()
 
 
