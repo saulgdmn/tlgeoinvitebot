@@ -29,15 +29,16 @@ def start_deeplinking_command(update: Update, context: CallbackContext):
 
     invited_chat_id = context.match.groupdict().get('chat_id', None)
     invited_chat = SpectatedChat.get_by_chat_id(invited_chat_id)
+    chat_lang = get_chat_lang(invited_chat)
 
     # check if inviting user is an invited user
     if from_user == to_user:
-        update.effective_chat.send_message(text=get_chat_lang(invited_chat).get('cant_invite_yourself_text'))
+        update.effective_chat.send_message(text=chat_lang.get('cant_invite_yourself_text'))
         return
 
     # check if an invited user is already a member of the chat
     if is_member(bot=bot, chat_id=invited_chat_id, user_id=to_user):
-        update.effective_chat.send_message(text=get_chat_lang(invited_chat).get('is_already_member_text'))
+        update.effective_chat.send_message(text=chat_lang.get('is_already_member_text'))
         return
 
     # check if a user referral record for an invited user is already exists
@@ -49,8 +50,9 @@ def start_deeplinking_command(update: Update, context: CallbackContext):
 
     update.effective_chat.send_message(
         reply_markup=generate_join_markup(invited_chat),
-        text=get_chat_lang(invited_chat).get('start_deeplinking_text').format(
-            chat_title=invited_chat.title),
+        text=chat_lang.get('start_deeplinking_text').format(
+            chat_title=invited_chat.title,
+            join_button_text=chat_lang.get('join_button_text')),
         parse_mode='HTML')
 
 
