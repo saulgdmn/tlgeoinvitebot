@@ -10,7 +10,7 @@ LANGUAGES = utility.load_languages_pack(LANGUAGES_PACK_PATH)
 
 ADMINISTRATOR_IDS = [401042341, 544498153]
 
-GEO_WEB_LINK = os.getenv('GEO_WEB_LINK')
+GEO_WEBSITE_LINK = os.getenv('GEO_WEBSITE_LINK')
 GEO_APP_LINK = os.getenv('GEO_APP_LINK')
 
 GEO_MULT = 5
@@ -23,12 +23,12 @@ CALLBACK_DATA_PATTERNS = {
     'ENABLE_NOTIFICATIONS': 'entf_{chat_id}',
     'DISABLE_NOTIFICATIONS': 'dntf_{chat_id}',
     'CHANGE_LANGUAGE': 'clng_{chat_id}',
-    'SEND_STATS': 'ssts_{chat_id}',
+    'SEND_NOTIFICATION': 'sntf_{chat_id}',
     'SETTINGS_BACK': 'sbck',
 
     'PICK_LANGUAGE': 'plng_{chat_id}_{language_shortcut}',
 
-    'DEEP_LINKING_LINK': 'dlnk_{chat_id}_{user_id}',
+    'DEEPLINKING_LINK': 'dlnk_{chat_id}_{user_id}',
     'GENERATE_REF_LINK': 'rlnk_{chat_id}_{user_id}'
 }
 
@@ -40,11 +40,11 @@ CALLBACK_DATA_REGEX = {
     'ENABLE_NOTIFICATIONS': r'^entf_(?P<chat_id>[\-\d]+)$',
     'DISABLE_NOTIFICATIONS': r'^dntf_(?P<chat_id>[\-\d]+)$',
     'CHANGE_LANGUAGE': r'^clng_(?P<chat_id>[\-\d]+)$',
-    'SEND_STATS': r'^ssts_(?P<chat_id>[\-\d]+)$',
+    'SEND_NOTIFICATION': r'^sntf_(?P<chat_id>[\-\d]+)$',
     'SETTINGS_BACK': r'^sbck$',
 
     'PICK_LANGUAGE': r'^plng_(?P<chat_id>[\-\d]+)_(?P<language_shortcut>[\-a-z]+)$',
 
-    'DEEP_LINKING_LINK': r'^\/start dlnk_(?P<chat_id>[\-\d]+)_(?P<user_id>[\-\d]+)$',
+    'DEEPLINKING_LINK': r'^\/start dlnk_(?P<chat_id>[\-\d]+)_(?P<user_id>[\-\d]+)$',
     'GENERATE_REF_LINK': r'^rlnk_(?P<chat_id>[\-\d]+)_(?P<user_id>[\-\d]+)$'
 }

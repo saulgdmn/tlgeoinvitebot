@@ -33,7 +33,7 @@ def load_languages_pack(path='./languages.yaml'):
         return None
 
 
-def generate_deep_linking_link(chat_id, user_id):
+def generate_deeplinking_link(chat_id, user_id):
     return 'https://t.me/{}?start={}'.format(settings.BOT_USERNAME,
                                              settings.CALLBACK_DATA_PATTERNS['DEEP_LINKING_LINK'].
                                             format(chat_id=chat_id, user_id=user_id))
@@ -77,9 +77,10 @@ def administrators_only(func):
     return wrapped
 
 
-def format_chat_stats(bot, chat: SpectatedChat, top=10):
+def format_chat_notification(bot, chat: SpectatedChat, top=10):
     """Return a formatted string of user referral statistic"""
 
+    chat_lang = get_chat_lang(chat)
     user_stats = chat.retrieve_referral_records()
     if user_stats is None:
         return None
@@ -89,13 +90,15 @@ def format_chat_stats(bot, chat: SpectatedChat, top=10):
         user = bot.get_chat_member(chat_id=chat.chat_id, user_id=stat['user_id']).user
 
         formatted_users.append(
-            get_chat_lang(chat).get('user_stat_pattern').format(user_score=stat['invited_users_count'] * settings.GEO_MULT,
-                                                                user_mention=user.mention_html()))
+            chat_lang.get('user_stat_pattern').format(
+                user_score=stat['invited_users_count'] * settings.GEO_MULT, user_mention=user.mention_html()))
 
     total_invited_users_count = sum([stat['invited_users_count'] for stat in user_stats])
-    return get_chat_lang(chat).get('stats_message').format(chat_title=chat.title,
-                                                           formatted_users='\n'.join(formatted_users),
-                                                           total_invited_users_count=total_invited_users_count)
+    return chat_lang.get('notification_text').format(
+        invite_button_text=chat_lang.get('invite_button_text'),
+        chat_title=chat.title,
+        formatted_users='\n'.join(formatted_users),
+        total_invited_users_count=total_invited_users_count)
 
 
 def format_chat_settings_message(chat: SpectatedChat):
@@ -110,42 +113,65 @@ def format_chat_settings_message(chat: SpectatedChat):
                                              language=chat.language)
 
 
-def generate_services_markup(chat=None, user_id=None):
+def generate_start_markup(chat=None, user_id=None):
     buttons = []
 
     if chat:
+        lang = get_chat_lang(chat)
+    else:
+        lang = get_lang('en')
+
+    if chat:
         buttons.append(
-            InlineKeyboardButton(text='Try now', switch_inline_query=chat.title))
+            InlineKeyboardButton(text=lang.get('invite_button_text'), switch_inline_query=chat.title))
     else:
         buttons.append(
-            InlineKeyboardButton(text='Try now', switch_inline_query=''))
+            InlineKeyboardButton(text=lang.get('invite_button_text'), switch_inline_query=''))
 
     if chat and user_id:
         buttons.append(
-            InlineKeyboardButton(text='Referral link',
-                                 callback_data=settings.CALLBACK_DATA_PATTERNS['GENERATE_REF_LINK'].
-                                 format(chat_id=chat.chat_id, user_id=user_id)))
+            InlineKeyboardButton(
+                text=lang.get('referral_link_button_text'),
+                callback_data=settings.CALLBACK_DATA_PATTERNS['GENERATE_REF_LINK'].format(
+                    chat_id=chat.chat_id, user_id=user_id)))
 
-    buttons.append(InlineKeyboardButton(text='Visit website', url=settings.GEO_WEB_LINK))
-    buttons.append(InlineKeyboardButton(text='Download app', url=settings.GEO_APP_LINK))
+    buttons.append(InlineKeyboardButton(text=lang.get('website_button_text'), url=settings.GEO_WEBSITE_LINK))
+    buttons.append(InlineKeyboardButton(text=lang.get('app_button_text'), url=settings.GEO_APP_LINK))
 
     return InlineKeyboardMarkup.from_column(buttons)
 
 
+def generate_join_markup(chat: SpectatedChat):
+    return InlineKeyboardMarkup([[
+        InlineKeyboardButton(
+            text=get_chat_lang(chat).get('join_button_text'),
+            url=chat.invite_link)
+    ]])
+
+
+def generate_invite_markup(chat: SpectatedChat = None):
+    return InlineKeyboardMarkup([[
+        InlineKeyboardButton(
+            text=get_chat_lang(chat).get('invite_button_text'),
+            switch_inline_query='' if chat is None else chat.title)
+    ]])
+
+
 def generate_chats_markup(chats: [SpectatedChat]):
     return InlineKeyboardMarkup.from_column(
-        [InlineKeyboardButton(text=chat.title,
-                              callback_data=settings.CALLBACK_DATA_PATTERNS['PICK_CHAT'].
-                              format(chat_id=chat.chat_id))
+        [InlineKeyboardButton(
+            text=chat.title,
+            callback_data=settings.CALLBACK_DATA_PATTERNS['PICK_CHAT'].format(
+                chat_id=chat.chat_id))
          for chat in chats])
 
 
 def generate_languages_markup(chat: SpectatedChat, languages: [str]):
     return InlineKeyboardMarkup.from_column(
-        [InlineKeyboardButton(text=language['name'],
-                              callback_data=settings.CALLBACK_DATA_PATTERNS['PICK_LANGUAGE'].
-                              format(chat_id=chat.chat_id,
-                                     language_shortcut=language['shortcut']))
+        [InlineKeyboardButton(
+            text=language['name'],
+            callback_data=settings.CALLBACK_DATA_PATTERNS['PICK_LANGUAGE'].format(
+                chat_id=chat.chat_id, language_shortcut=language['shortcut']))
          for language in languages])
 
 
@@ -154,36 +180,45 @@ def generate_chat_settings_markup(chat: SpectatedChat):
 
     if chat.enabled:
         buttons.append(
-            InlineKeyboardButton(text='Disable chat', callback_data=settings.CALLBACK_DATA_PATTERNS['DISABLE_CHAT'].
-                                 format(chat_id=chat.chat_id)))
+            InlineKeyboardButton(
+                text='Disable chat',
+                callback_data=settings.CALLBACK_DATA_PATTERNS['DISABLE_CHAT'].format(
+                    chat_id=chat.chat_id)))
     else:
         buttons.append(
-            InlineKeyboardButton(text='Enable chat', callback_data=settings.CALLBACK_DATA_PATTERNS['ENABLE_CHAT'].
-                                 format(chat_id=chat.chat_id)))
+            InlineKeyboardButton(
+                text='Enable chat',
+                callback_data=settings.CALLBACK_DATA_PATTERNS['ENABLE_CHAT'].format(
+                    chat_id=chat.chat_id)))
 
     if chat.notifications:
         buttons.append(
-            InlineKeyboardButton(text='Disable notifications',
-                                 callback_data=settings.CALLBACK_DATA_PATTERNS['DISABLE_NOTIFICATIONS'].
-                                 format(chat_id=chat.chat_id)))
+            InlineKeyboardButton(
+                text='Disable notifications',
+                callback_data=settings.CALLBACK_DATA_PATTERNS['DISABLE_NOTIFICATIONS'].format(
+                    chat_id=chat.chat_id)))
     else:
         buttons.append(
-            InlineKeyboardButton(text='Enable notifications',
-                                 callback_data=settings.CALLBACK_DATA_PATTERNS['ENABLE_NOTIFICATIONS'].
-                                 format(chat_id=chat.chat_id)))
+            InlineKeyboardButton(
+                text='Enable notifications',
+                callback_data=settings.CALLBACK_DATA_PATTERNS['ENABLE_NOTIFICATIONS'].format(
+                    chat_id=chat.chat_id)))
 
     buttons.append(
-        InlineKeyboardButton(text='Change a language',
-                             callback_data=settings.CALLBACK_DATA_PATTERNS['CHANGE_LANGUAGE'].
-                             format(chat_id=chat.chat_id)))
+        InlineKeyboardButton(
+            text='Change a language',
+            callback_data=settings.CALLBACK_DATA_PATTERNS['CHANGE_LANGUAGE'].format(
+                chat_id=chat.chat_id)))
 
     buttons.append(
-        InlineKeyboardButton(text='Send statistic',
-                             callback_data=settings.CALLBACK_DATA_PATTERNS['SEND_STATS'].
-                             format(chat_id=chat.chat_id)))
+        InlineKeyboardButton(
+            text='Send notification',
+            callback_data=settings.CALLBACK_DATA_PATTERNS['SEND_NOTIFICATION'].format(
+                chat_id=chat.chat_id)))
 
     buttons.append(
-        InlineKeyboardButton(text='\u2190 Back',
-                             callback_data=settings.CALLBACK_DATA_PATTERNS['SETTINGS_BACK']))
+        InlineKeyboardButton(
+            text='\u2190 Back',
+            callback_data=settings.CALLBACK_DATA_PATTERNS['SETTINGS_BACK']))
 
     return InlineKeyboardMarkup.from_column(buttons)

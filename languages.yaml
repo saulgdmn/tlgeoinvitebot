@@ -1,46 +1,54 @@
 - name: "English"
   shortcut: "en"
 
-  start_message: |
-    Hi! I'm Geo Invite Bot, I will help you invite your friends to <b>GEO community</b>!
+  user_stat_pattern: "{user_mention} - <b>{user_score}</b> geo"
+  join_button_text: "Join GeoDB"
+  invite_button_text: "Invite"
+  interested_button_text: "Interested"
+  website_button_text: "Visit website"
+  app_button_text: "Download app"
+  referral_link_button_text: "Personal ref. link"
 
-    Click <b>try now</b> below and choose a friend chat / group / channel from where you want to invite your friends.
+  cant_invite_yourself_text: "You can't invite yourself to the chat :)"
+  is_already_member_text: "You're already a member of the chat!"
 
-    Your friends who joined the group via your invite message will increase your winning chances!
+  start_text: |
+    Hi 👋
+    I am GeoDB Invite BOT!
+    My Goal is to help you invite your friends to to <b>GEO community</b>!
 
-    Don't forget about our site and download geo app.
+    Click <b>Invite Friends</b> below and choose a friend chat / group / channel from where you want to invite your friends.
 
-  start_invite_message: |
-    Thank you for your interest! Click 'Join group' below to join <b>{chat_title}</b>!
+    All your friends who joine GeoDB group via your invite message will increase your chances to win GEOs!
 
-  start_reply_message: |
+    Don’t forget about to ask them to visit our website and download GeoCash app.
+
+  start_deeplinking_text: |
+    Thank you for your interest! Click '{join_button_text}' below to join <b>{chat_title}</b> and share your unique invite link with your friends!
+
+  join_user_text: |
     Gongratulations! You have been joined to <b>{chat_title}</b>!
 
-    Click <b>try now</b> below and choose a friend chat / group / channel from where you want to invite your friends.
+    Click <b>{invite_button_text}</b> below and choose a friend / group.
 
-    Your friends who joined the group via your invite message will increase your winning chances!
+    All your friends who joine GeoDB group via your invite message will increase your chances to win GEOs!
 
-    Don't forget about our site and download geo app.
+    Don’t forget about to ask them to visit our website and download GeoCash app.
 
-    You also able to share an invite link oustside of Telegram. Click 'Referral link' to generate an invite link and shere it with friends!
-
-  referral_button_reply: |
+  referral_link_text: |
     Your personal referral link:
     {referral_link}
 
-  inline_invite_message: |
+  inline_invite_text: |
     Hi! You have been invited to <b>{chat_title}</b>.
     Press the button to accept!
 
-  notification_message: |
+  notification_text: |
     GEO #InviteIndia contest is now Live on this group.
-    If you want to participate, please use <b>'Try now'</b> button or message @geoinvite_bot.
+    If you want to participate, please use <b>{invite_button_text}</b> button.
 
-  stats_message: |
     Statistic for <b>{chat_title}</b>:
 
     {formatted_users}
 
     Total count of invited Friends: <b>{total_invited_users_count}</b>
-
-  user_stat_pattern: "{user_mention} - <b>{user_score}</b> geo"

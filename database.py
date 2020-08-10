@@ -32,8 +32,8 @@ class SpectatedChat(BaseModel):
         return SpectatedChat.create(chat_id=chat_id, title=title, invite_link=invite_link, language=language,
                                     notifications=notifications, enabled=enabled)
 
-    def remove_from_spectated(self):
-        self.delete_instance()
+    def remove_from_spectated(chat_id):
+        ReferralRecord.delete().where(ReferralRecord.chat_id == chat_id).execute()
         return True
 
     def drop_referral_records(self):
@@ -80,7 +80,6 @@ class SpectatedChat(BaseModel):
         return SpectatedChat.get_or_none(SpectatedChat.title == title)
 
     def get_by_chat_id(chat_id):
-        print('>>>>>>>>>>>>> {}'.format(chat_id))
         return SpectatedChat.get_or_none(SpectatedChat.chat_id == chat_id)
 
     def update_invite_link(self, invite_link=None):

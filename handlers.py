@@ -14,8 +14,8 @@ from database import SpectatedChat, ReferralRecord
 def start_command(update: Update, context: CallbackContext):
     """Handle the command /start issued in private chat."""
 
-    update.effective_chat.send_message(text=get_lang('en').get('start_message'), parse_mode='HTML',
-                                       reply_markup=generate_services_markup())
+    update.effective_chat.send_message(
+        text=get_lang('en').get('start_message'), reply_markup=generate_start_markup(), parse_mode='HTML')
 
 
 def start_deeplinking_command(update: Update, context: CallbackContext):
@@ -23,18 +23,21 @@ def start_deeplinking_command(update: Update, context: CallbackContext):
 
     bot = context.bot
     message = update.effective_message
-    invited_chat_id = context.match.groupdict().get('chat_id', None)
+
     from_user = context.match.groupdict().get('user_id', None)
     to_user = message.from_user.id
 
+    invited_chat_id = context.match.groupdict().get('chat_id', None)
+    invited_chat = SpectatedChat.get_by_chat_id(invited_chat_id)
+
     # check if inviting user is an invited user
     if from_user == to_user:
-        update.effective_chat.send_message(text='You can\'t invite yourself to the chat :)')
+        update.effective_chat.send_message(text=get_chat_lang(invited_chat).get('cant_invite_yourself_text'))
         return
 
     # check if an invited user is already a member of the chat
     if is_member(bot=bot, chat_id=invited_chat_id, user_id=to_user):
-        update.effective_chat.send_message(text='You\'re already a member of the chat!')
+        update.effective_chat.send_message(text=get_chat_lang(invited_chat).get('is_already_member_text'))
         return
 
     # check if a user referral record for an invited user is already exists
@@ -44,13 +47,11 @@ def start_deeplinking_command(update: Update, context: CallbackContext):
         record = ReferralRecord.add(chat_id=invited_chat_id, to_user_chat_id=message.chat.id, from_user=from_user,
                                     to_user=to_user)
 
-    invited_chat = SpectatedChat.get_by_chat_id(invited_chat_id)
-
-    markup = InlineKeyboardMarkup([[InlineKeyboardButton(text='Join now!', url=invited_chat.invite_link)]])
-    update.effective_chat.send_message(text=get_chat_lang(invited_chat).get('start_invite_message').
-                                       format(chat_title=invited_chat.title),
-                                       reply_markup=markup,
-                                       parse_mode='HTML')
+    update.effective_chat.send_message(
+        reply_markup=generate_join_markup(invited_chat),
+        text=get_chat_lang(invited_chat).get('start_deeplinking_text').format(
+            chat_title=invited_chat.title),
+        parse_mode='HTML')
 
 
 @administrators_only
@@ -67,15 +68,14 @@ def chats_command_handler(update: Update, context: CallbackContext):
 
 
 def pick_chat_callback(update: Update, context: CallbackContext):
-
     chat_id = context.match.groupdict().get('chat_id', None)
     chat = SpectatedChat.get_by_chat_id(chat_id)
     if chat is None:
         log.info('pick_chat_callback chat not founded: {}'.format(chat_id))
         return
 
-    update.effective_message.edit_text(text=format_chat_settings_message(chat), parse_mode='HTML',
-                                       reply_markup=generate_chat_settings_markup(chat))
+    update.effective_message.edit_text(
+        text=format_chat_settings_message(chat), parse_mode='HTML', reply_markup=generate_chat_settings_markup(chat))
 
 
 def enable_chat_callback(update: Update, context: CallbackContext):
@@ -86,8 +86,8 @@ def enable_chat_callback(update: Update, context: CallbackContext):
         return
 
     if context.bot.id not in [admin.user.id for admin in context.bot.get_chat_administrators(chat_id=chat.chat_id)]:
-        update.callback_query.answer(text='Not enough rights to export chat invite link.\nPlease, make me an administrator',
-                                     show_alert=True)
+        update.callback_query.answer(
+            text='Not enough rights to export chat invite link.\nPlease, make me an administrator', show_alert=True)
         return
 
     invite_link = context.bot.get_chat(chat.chat_id).link
@@ -96,8 +96,8 @@ def enable_chat_callback(update: Update, context: CallbackContext):
 
     chat.update_invite_link(invite_link)
     chat.update_enabled(True)
-    update.effective_message.edit_text(text=format_chat_settings_message(chat), parse_mode='HTML',
-                                       reply_markup=generate_chat_settings_markup(chat))
+    update.effective_message.edit_text(
+        text=format_chat_settings_message(chat), parse_mode='HTML', reply_markup=generate_chat_settings_markup(chat))
 
 
 def disable_chat_callback(update: Update, context: CallbackContext):
@@ -108,8 +108,8 @@ def disable_chat_callback(update: Update, context: CallbackContext):
         return
 
     chat.update_enabled(False)
-    update.effective_message.edit_text(text=format_chat_settings_message(chat), parse_mode='HTML',
-                                       reply_markup=generate_chat_settings_markup(chat))
+    update.effective_message.edit_text(
+        text=format_chat_settings_message(chat), parse_mode='HTML', reply_markup=generate_chat_settings_markup(chat))
 
 
 def enable_notifications_callback(update: Update, context: CallbackContext):
@@ -120,8 +120,8 @@ def enable_notifications_callback(update: Update, context: CallbackContext):
         return
 
     chat.update_notifications(True)
-    update.effective_message.edit_text(text=format_chat_settings_message(chat), parse_mode='HTML',
-                                       reply_markup=generate_chat_settings_markup(chat))
+    update.effective_message.edit_text(
+        text=format_chat_settings_message(chat), parse_mode='HTML', reply_markup=generate_chat_settings_markup(chat))
 
 
 def disable_notifications_callback(update: Update, context: CallbackContext):
@@ -132,8 +132,8 @@ def disable_notifications_callback(update: Update, context: CallbackContext):
         return
 
     chat.update_notifications(False)
-    update.effective_message.edit_text(text=format_chat_settings_message(chat), parse_mode='HTML',
-                                       reply_markup=generate_chat_settings_markup(chat))
+    update.effective_message.edit_text(
+        text=format_chat_settings_message(chat), parse_mode='HTML', reply_markup=generate_chat_settings_markup(chat))
 
 
 def change_language_callback(update: Update, context: CallbackContext):
@@ -143,12 +143,13 @@ def change_language_callback(update: Update, context: CallbackContext):
         log.info('change_language_callback chat not founded: {}'.format(chat_id))
         return
 
-    update.effective_message.edit_text(text='Choose a language for <b>{chat_title}</b>'.format(chat_title=chat.title), parse_mode='HTML',
-                                       reply_markup=generate_languages_markup(chat, settings.LANGUAGES))
+    update.effective_message.edit_text(
+        text='Choose a language for <b>{chat_title}</b>'.format(chat_title=chat.title),
+        reply_markup=generate_languages_markup(chat, settings.LANGUAGES),
+        parse_mode='HTML')
 
 
 def pick_language_callback(update: Update, context: CallbackContext):
-
     chat_id = context.match.groupdict().get('chat_id', None)
     chat = SpectatedChat.get_by_chat_id(chat_id)
     if chat is None:
@@ -158,35 +159,34 @@ def pick_language_callback(update: Update, context: CallbackContext):
     language = context.match.groupdict().get('language_shortcut', 'en')
     chat.update_language(language)
 
-    update.effective_message.edit_text(text=format_chat_settings_message(chat), parse_mode='HTML',
-                                       reply_markup=generate_chat_settings_markup(chat))
+    update.effective_message.edit_text(
+        text=format_chat_settings_message(chat), reply_markup=generate_chat_settings_markup(chat), parse_mode='HTML')
 
 
-def send_stats_callback(update: Update, context: CallbackContext):
+def send_notification_callback(update: Update, context: CallbackContext):
     chat_id = context.match.groupdict().get('chat_id', None)
     chat = SpectatedChat.get_by_chat_id(chat_id)
     if chat is None:
-        log.info('send_stats_callback chat not founded: {}'.format(chat_id))
+        log.info('send_notification_callback chat not founded: {}'.format(chat_id))
         return
 
-    formatted_chat_stats = format_chat_stats(context.bot, chat)
-    if formatted_chat_stats is None:
-        update.callback_query.answer(text='Statistic is not available!', show_alert=True)
+    formatted_chat_notification = format_chat_notification(context.bot, chat)
+    if formatted_chat_notification is None:
+        update.callback_query.answer(text='Notification is not available!', show_alert=True)
         return
 
-    markup = InlineKeyboardMarkup([[InlineKeyboardButton(text='Try now!', switch_inline_query='')]])
-    context.bot.send_message(text=formatted_chat_stats, chat_id=chat_id, parse_mode='HTML', reply_markup=markup)
+    context.bot.send_message(
+        chat_id=chat_id, text=formatted_chat_notification, reply_markup=generate_start_markup(chat), parse_mode='HTML')
+
     update.callback_query.answer()
 
 
 def settings_back_callback(update: Update, context: CallbackContext):
-
     chats = SpectatedChat.get_chats_list()
     update.effective_message.edit_text(text='Choose a chat.', reply_markup=generate_chats_markup(chats))
 
 
 def generate_ref_link_callback(update: Update, context: CallbackContext):
-
     chat_id = context.match.groupdict().get('chat_id', None)
     user_id = context.match.groupdict().get('user_id', None)
     chat = SpectatedChat.get_by_chat_id(chat_id)
@@ -194,9 +194,10 @@ def generate_ref_link_callback(update: Update, context: CallbackContext):
         log.info('generate_ref_link_callback chat not founded: {}'.format(chat_id))
         return
 
-    update.effective_chat.send_message(text=get_chat_lang(chat).get('referral_button_reply').
-                             format(referral_link=generate_deep_linking_link(chat_id=chat.chat_id, user_id=user_id)),
-                             parse_mode='HTML', disable_web_page_preview=True)
+    update.effective_chat.send_message(
+        text=get_chat_lang(chat).get('referral_link_text').format(
+            referral_link=generate_deeplinking_link(chat_id=chat.chat_id, user_id=user_id)),
+        parse_mode='HTML', disable_web_page_preview=True)
     update.callback_query.answer()
 
 
@@ -215,22 +216,26 @@ def inline_query_handler(update: Update, context: CallbackContext):
         if query.query not in chat.title:
             continue
 
+        chat_lang = get_chat_lang(chat)
+
         # skip if a user is not a member of the chat
         if is_member(bot=bot, chat_id=chat.chat_id, user_id=query.from_user.id) is False:
             continue
 
         # generate keyboard markup with a referral button
         markup = InlineKeyboardMarkup([[
-            InlineKeyboardButton(text='Interested!',
-                                 url=generate_deep_linking_link(chat_id=chat.chat_id, user_id=query.from_user.id))]])
+            InlineKeyboardButton(
+                text=chat_lang.get('interested_button_text'),
+                url=generate_deeplinking_link(chat_id=chat.chat_id, user_id=query.from_user.id))
+        ]])
 
         results.append(InlineQueryResultArticle(
             id=uuid4(),
             title=chat.title,
             reply_markup=markup,
             input_message_content=InputTextMessageContent(
-                message_text=get_chat_lang(chat).get('inline_invite_message').format(chat_title=chat.title),
-                parse_mode='HTML')))
+                message_text=chat_lang.get('inline_invite_text').format(chat_title=chat.title),
+            parse_mode='HTML')))
 
     query.answer(results=results, is_personal=True, cache_time=0)
 
@@ -262,10 +267,11 @@ def new_chat_members_handler(update: Update, context: CallbackContext):
         if has_admin(bot, chat.id):
             SpectatedChat.add_to_spectated(chat_id=chat.id, title=chat.title)
             log.info('Add new spectated chat: {}'.format(chat))
-            return
         else:
             chat.leave()
             log.info('Leaving the chat: {}'.format(chat))
+
+        return
 
     if SpectatedChat.is_spectated(chat.id) is False:
         log.info('{} chat is not spectated.')
@@ -277,13 +283,17 @@ def new_chat_members_handler(update: Update, context: CallbackContext):
 
         record = ReferralRecord.get_by_to_user(chat_id=chat.id, to_user=user.id)
         if record:
-            spectated_chat = SpectatedChat.get_by_chat_id(record.chat_id)
-            context.bot.send_message(chat_id=record.to_user_chat_id,
-                                     text=get_chat_lang(spectated_chat).get('start_reply_message').
-                                     format(chat_title=spectated_chat.title),
-                                     parse_mode='HTML',
-                                     reply_markup=generate_services_markup(chat=spectated_chat, user_id=user.id))
             record.update_joined_chat(True)
+
+            cht = SpectatedChat.get_by_chat_id(record.chat_id)
+            cht_lang = get_chat_lang(cht)
+
+            context.bot.send_message(
+                chat_id=record.to_user_chat_id,
+                text=cht_lang.get('join_user_text').format(
+                    chat_title=cht.title, invite_button_text=cht_lang.get('invite_button_text')),
+                reply_markup=generate_start_markup(chat=cht, user_id=user.id),
+                parse_mode='HTML')
 
 
 def left_chat_member_handler(update: Update, context: CallbackContext):
@@ -297,7 +307,7 @@ def left_chat_member_handler(update: Update, context: CallbackContext):
 
     if bot.id == message.left_chat_member.id:
         log.info('Remove spectated chat: {}'.format(chat))
-        SpectatedChat.get_by_chat_id(chat_id=chat.id).remove_from_spectated()
+        SpectatedChat.remove_from_spectated(chat_id=chat.id)
         return
 
     record = ReferralRecord.get_by_to_user(chat_id=chat.id, to_user=message.left_chat_member.id)
@@ -306,8 +316,16 @@ def left_chat_member_handler(update: Update, context: CallbackContext):
 
 
 def on_notification_callback(context: CallbackContext):
+    chat_id = context.job_queue.context
+    chat = SpectatedChat.get_by_chat_id(chat_id)
+    if chat is None:
+        log.info('on_notification_callback chat not founded: {}'.format(chat_id))
+        return
 
-    for chat in SpectatedChat.get_chats_list(enabled=True):
-        markup = InlineKeyboardMarkup([[InlineKeyboardButton(text='Try now!', switch_inline_query='')]])
-        context.bot.send_message(chat_id=chat.chat_id, text=get_chat_lang(chat).get('notification_message'),
-                                 reply_markup=markup, parse_mode='HTML')
+    formatted_chat_notification = format_chat_notification(context.bot, chat)
+    if formatted_chat_notification is None:
+        log.info('Unable to format statistic.')
+        return
+
+    context.bot.send_message(
+        chat_id=chat_id, text=formatted_chat_notification, reply_markup=generate_start_markup(chat), parse_mode='HTML')
