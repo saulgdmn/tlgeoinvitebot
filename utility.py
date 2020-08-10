@@ -183,7 +183,7 @@ def generate_chat_settings_markup(chat: SpectatedChat):
                              format(chat_id=chat.chat_id)))
 
     buttons.append(
-        InlineKeyboardButton(text='&larr; Back',
+        InlineKeyboardButton(text='\x2190; Back',
                              callback_data=settings.CALLBACK_DATA_PATTERNS['SETTINGS_BACK']))
 
     return InlineKeyboardMarkup.from_column(buttons)
