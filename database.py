@@ -116,6 +116,7 @@ class SpectatedChat(BaseModel):
 class ReferralRecord(BaseModel):
     """ORM model of a user referral record"""
     chat_id = peewee.IntegerField()
+    to_user_chat_id = peewee.IntegerField()
     from_user = peewee.IntegerField()
     to_user = peewee.IntegerField()
     date = peewee.DateTimeField()
@@ -124,9 +125,9 @@ class ReferralRecord(BaseModel):
     class Meta:
         database = db
 
-    def add(chat_id, from_user, to_user):
-        return ReferralRecord.create(chat_id=chat_id, from_user=from_user, to_user=to_user,
-                                     date=datetime.datetime.now(), joined_chat=False)
+    def add(chat_id, from_user, to_user, to_user_chat_id):
+        return ReferralRecord.create(chat_id=chat_id, to_user_chat_id=to_user_chat_id, from_user=from_user,
+                                     to_user=to_user, date=datetime.datetime.now(), joined_chat=False)
 
     def get_by_to_user(chat_id, to_user):
         return ReferralRecord.get_or_none(ReferralRecord.chat_id == chat_id, ReferralRecord.to_user == to_user)

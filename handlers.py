@@ -41,7 +41,8 @@ def start_deeplinking_command(update: Update, context: CallbackContext):
     # and create if not
     record = ReferralRecord.get_by_to_user(chat_id=invited_chat_id, to_user=to_user)
     if record is None:
-        record = ReferralRecord.add(chat_id=invited_chat_id, from_user=from_user, to_user=to_user)
+        record = ReferralRecord.add(chat_id=invited_chat_id, to_user_chat_id=message.chat.id, from_user=from_user,
+                                    to_user=to_user)
 
     invited_chat = SpectatedChat.get_by_chat_id(invited_chat_id)
 
@@ -306,6 +307,12 @@ def new_chat_members_handler(update: Update, context: CallbackContext):
 
         record = ReferralRecord.get_by_to_user(chat_id=chat.id, to_user=user.id)
         if record:
+            spectated_chat = SpectatedChat.get_by_chat_id(record.chat_id)
+            context.bot.send_message(chat_id=record.to_user_chat_id,
+                                     text=get_chat_lang(spectated_chat).get('start_reply_message').
+                                     format(chat_title=spectated_chat.title),
+                                     parse_mode='HTML',
+                                     reply_markup=generate_services_markup(spectated_chat))
             record.update_joined_chat(True)
 
 

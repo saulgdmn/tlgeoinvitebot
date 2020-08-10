@@ -11,13 +11,18 @@
     Don't forget about our site and download geo app.
 
   start_invite_message: |
-    Thank you for your interest! Click 'Join group' below to join <b>{chat_title}</b> and share your invite link with your friends!
+    Thank you for your interest! Click 'Join group' below to join <b>{chat_title}</b>!
+
+  start_reply_message: |
+    Gongratulations! You have been joined to <b>{chat_title}</b>!
 
     Click <b>try now</b> below and choose a friend chat / group / channel from where you want to invite your friends.
 
     Your friends who joined the group via your invite message will increase your winning chances!
 
     Don't forget about our site and download geo app.
+
+    You also able to share an invite link oustside of Telegram. Click 'Referral link' to generate an invite link and shere it with friends!
 
   inline_invite_message: |
     Hi! You have been invited to <b>{chat_title}</b>.
