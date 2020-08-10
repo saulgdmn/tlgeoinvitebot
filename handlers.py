@@ -170,7 +170,8 @@ def send_notification_callback(update: Update, context: CallbackContext):
         log.info('send_notification_callback chat not founded: {}'.format(chat_id))
         return
 
-    formatted_chat_notification = format_chat_notification(context.bot, chat)
+    formatted_chat_notification = format_chat_notification(
+        bot=context.bot, chat=chat, top=settings.GEO_RATING_USERS_COUNT)
     if formatted_chat_notification is None:
         update.callback_query.answer(text='Notification is not available!', show_alert=True)
         return
@@ -322,7 +323,8 @@ def on_notification_callback(context: CallbackContext):
         log.info('on_notification_callback chat not founded: {}'.format(chat_id))
         return
 
-    formatted_chat_notification = format_chat_notification(context.bot, chat)
+    formatted_chat_notification = format_chat_notification(
+        bot=context.bot, chat=chat, top=settings.GEO_RATING_USERS_COUNT)
     if formatted_chat_notification is None:
         log.info('Unable to format statistic.')
         return

@@ -77,7 +77,7 @@ def administrators_only(func):
     return wrapped
 
 
-def format_chat_notification(bot, chat: SpectatedChat, top=10):
+def format_chat_notification(bot, chat: SpectatedChat, top):
     """Return a formatted string of user referral statistic"""
 
     chat_lang = get_chat_lang(chat)
@@ -86,7 +86,7 @@ def format_chat_notification(bot, chat: SpectatedChat, top=10):
         return None
 
     formatted_users = []
-    for key, stat in enumerate(user_stats[:settings.GEO_RATING_USERS_COUNT]):
+    for key, stat in enumerate(user_stats[:top]):
         user = bot.get_chat_member(chat_id=chat.chat_id, user_id=stat['user_id']).user
 
         formatted_users.append(
