@@ -32,7 +32,7 @@ def start_deeplinking_command(update: Update, context: CallbackContext):
     chat_lang = get_chat_lang(invited_chat)
 
     # check if inviting user is an invited user
-    if from_user == to_user:
+    if int(from_user) == int(to_user):
         update.effective_chat.send_message(text=chat_lang.get('cant_invite_yourself_text'))
         log.info('{} amd {}'.format(from_user, to_user))
         return
