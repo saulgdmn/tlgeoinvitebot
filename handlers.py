@@ -15,7 +15,7 @@ def start_command(update: Update, context: CallbackContext):
     """Handle the command /start issued in private chat."""
 
     update.effective_chat.send_message(
-        text=get_lang('en').get('start_message'), reply_markup=generate_start_markup(), parse_mode='HTML')
+        text=get_lang('en').get('start_text'), reply_markup=generate_start_markup(), parse_mode='HTML')
 
 
 def start_deeplinking_command(update: Update, context: CallbackContext):
