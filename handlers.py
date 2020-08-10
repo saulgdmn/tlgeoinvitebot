@@ -282,7 +282,7 @@ def new_chat_members_handler(update: Update, context: CallbackContext):
                                      text=get_chat_lang(spectated_chat).get('start_reply_message').
                                      format(chat_title=spectated_chat.title),
                                      parse_mode='HTML',
-                                     reply_markup=generate_services_markup(spectated_chat))
+                                     reply_markup=generate_services_markup(chat=spectated_chat, user_id=user.id))
             record.update_joined_chat(True)
 
 
