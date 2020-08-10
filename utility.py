@@ -86,12 +86,12 @@ def format_chat_notification(bot, chat: SpectatedChat, top=10):
         return None
 
     formatted_users = []
-    for key, stat in enumerate(user_stats[:top]):
+    for key, stat in enumerate(user_stats[:settings.GEO_RATING_USERS_COUNT]):
         user = bot.get_chat_member(chat_id=chat.chat_id, user_id=stat['user_id']).user
 
         formatted_users.append(
             chat_lang.get('user_stat_pattern').format(
-                user_score=stat['invited_users_count'] * settings.GEO_MULT, user_mention=user.mention_html()))
+                user_score=stat['invited_users_count'] * settings.GEO_INVITED_USER_WEIGHT, user_mention=user.mention_html()))
 
     total_invited_users_count = sum([stat['invited_users_count'] for stat in user_stats])
     return chat_lang.get('notification_text').format(
