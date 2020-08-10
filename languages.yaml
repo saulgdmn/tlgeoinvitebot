@@ -14,10 +14,12 @@
 
   start_text: |
     Hi 👋
+
     I am GeoDB Invite BOT!
+
     My Goal is to help you invite your friends to to <b>GEO community</b>!
 
-    Click <b>Invite Friends</b> below and choose a friend chat / group / channel from where you want to invite your friends.
+    Click <b>{invite_button_text}</b> below and choose a friend chat / group / channel from where you want to invite your friends.
 
     All your friends who joine GeoDB group via your invite message will increase your chances to win GEOs!
 
@@ -37,6 +39,7 @@
 
   referral_link_text: |
     Your personal referral link:
+
     {referral_link}
 
   inline_invite_text: |
@@ -52,3 +55,60 @@
     {formatted_users}
 
     Total count of invited Friends: <b>{total_invited_users_count}</b>
+
+- name: "Hindi"
+  shortcut: "hi"
+
+  user_stat_pattern: "{user_mention} - <b>{user_score}</b> geo"
+  join_button_text: "Join GeoDB"
+  invite_button_text: "Invite"
+  interested_button_text: "Interested"
+  website_button_text: "Visit website"
+  app_button_text: "Download app"
+  referral_link_button_text: "Personal ref. link"
+
+  cant_invite_yourself_text: "You can't invite yourself to the chat :)"
+  is_already_member_text: "You're already a member of the chat!"
+
+  start_text: |
+    Hi 👋
+
+    Main hoon GeoDB Invite BOT!
+
+    Mera Goal hai ki aap apne dosto ko invite kar sake <b>GEO community</b> main!
+
+    Click <b>{invite_button_text}</b> below aur apne Dost ke saath chat, ya phir group, ya channel select kain.
+
+    Sare aapke friends jo GeoDB group ko aapkle link ke through join karenge, wo aapke GEO win main count honge!
+
+    Humari website ko check karna aur GeoCash app ko download karna na bhule.
+
+  start_deeplinking_text: |
+    '{join_button_text}' ko click kare <b>{chat_title}</b> join karne ke liye aur apne friends ke saath invite link share karne ke liye!
+
+  join_user_text: |
+    Click <b>{invite_button_text}</b> aur friend ya group ko choose kare.
+
+    Sare aapke friends jo GeoDB group ko aapkle link ke through join karenge, wo aapke GEO win main count honge!
+
+    Humari website ko check karna aur GeoCash app ko download karna na bhule.
+
+  referral_link_text: |
+    Your personal referral link:
+
+    {referral_link}
+
+  inline_invite_text: |
+    Hi! You have been invited to <b>{chat_title}</b>.
+    Press the button to accept!
+
+  notification_text: |
+    GEO #InviteIndia contest is group pe live hai.
+    Participate karna hai to Press <b>'{invite_button_text}'</b> button.
+    5 GeoCash har invite ka
+
+    Status ye hai for <b>{chat_title}</b>:
+
+    {formatted_users}
+
+    Total firneds invited: <b>{total_invited_users_count}</b>
