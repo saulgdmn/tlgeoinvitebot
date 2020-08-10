@@ -34,9 +34,10 @@ def load_languages_pack(path='./languages.yaml'):
 
 
 def generate_deeplinking_link(chat_id, user_id):
-    return 'https://t.me/{}?start={}'.format(settings.BOT_USERNAME,
-                                             settings.CALLBACK_DATA_PATTERNS['DEEP_LINKING_LINK'].
-                                            format(chat_id=chat_id, user_id=user_id))
+    return 'https://t.me/{}?start={}'.format(
+        settings.BOT_USERNAME,
+        settings.CALLBACK_DATA_PATTERNS['DEEPLINKING_LINK'].format(
+            chat_id=chat_id, user_id=user_id))
 
 
 def is_admin(bot, chat_id, user_id):
