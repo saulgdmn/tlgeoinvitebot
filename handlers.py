@@ -194,9 +194,9 @@ def generate_ref_link_callback(update: Update, context: CallbackContext):
         log.info('generate_ref_link_callback chat not founded: {}'.format(chat_id))
         return
 
-    context.bot.send_message(text=get_chat_lang(chat).get('referral_button_reply').
+    update.effective_chat.send_message(text=get_chat_lang(chat).get('referral_button_reply').
                              format(referral_link=generate_deep_linking_link(chat_id=chat.chat_id, user_id=user_id)),
-                             chat_id=chat_id, parse_mode='HTML')
+                             parse_mode='HTML')
     update.callback_query.answer()
 
 
