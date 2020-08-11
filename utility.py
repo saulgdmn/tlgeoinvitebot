@@ -108,7 +108,7 @@ def run_notification_job(chat: SpectatedChat, job_queue: JobQueue, callback):
             offset = -datetime.timedelta(hours=int(m.groupdict()['h']), minutes=int(m.groupdict()['m']))
 
         j = JobQueue.run_daily(
-            name=chat.title, callback=callback, time=datetime.time(hour=h, m=10, tzinfo=datetime.timezone(offset=offset)),
+            name=chat.title, callback=callback, time=datetime.time(hour=h, minute=10, tzinfo=datetime.timezone(offset=offset)),
             context=chat.chat_id)
 
 
