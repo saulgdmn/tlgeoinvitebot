@@ -152,7 +152,7 @@ def generate_start_markup(chat=None, user_id=None):
 
         buttons.append(
             InlineKeyboardButton(
-                text=lang.get('personal_statistic_button_text'),
+                text=lang.get('personal_stats_button_text'),
                 callback_data=settings.CALLBACK_DATA_PATTERNS['PERSONAL_STATS'].format(
                     chat_id=chat.chat_id, user_id=user_id)))
 
