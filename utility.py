@@ -19,11 +19,21 @@ def get_lang(shortcut):
             return lang
 
 
+def get_tmzn(shortcut):
+    for tmzn in settings.CONFIG['TIMEZONES']:
+        if tmzn['shortcut'] == shortcut:
+            return tmzn
+
+
 def get_chat_lang(chat: SpectatedChat):
     return get_lang(chat.language)
 
 
-def load_languages_pack(path='./languages.yaml'):
+def get_chat_tmzn(chat: SpectatedChat):
+    return get_tmzn(chat.timezone)
+
+
+def load_config(path):
 
     try:
         with open(path, 'r', encoding='utf8') as f:
@@ -33,11 +43,14 @@ def load_languages_pack(path='./languages.yaml'):
         return None
 
 
-def generate_deeplinking_link(chat_id, user_id):
-    return 'https://t.me/{}?start={}'.format(
-        settings.BOT_USERNAME,
-        settings.CALLBACK_DATA_PATTERNS['DEEPLINKING_LINK'].format(
-            chat_id=chat_id, user_id=user_id))
+def load_languages(path):
+
+    try:
+        with open(path, 'r', encoding='utf8') as f:
+            return yaml.load(f)
+    except yaml.YAMLError as e:
+        log.info('Failed to load {}: {}'.format(path, e))
+        return None
 
 
 def is_admin(bot, chat_id, user_id):
@@ -78,6 +91,13 @@ def administrators_only(func):
     return wrapped
 
 
+def generate_deeplinking_link(chat_id, user_id):
+    return 'https://t.me/{}?start={}'.format(
+        settings.BOT_USERNAME,
+        settings.CALLBACK_DATA_PATTERNS['DEEPLINKING_LINK'].format(
+            chat_id=chat_id, user_id=user_id))
+
+
 def format_chat_stats(bot, chat: SpectatedChat, top):
     """Return a formatted string of user referral statistic"""
 
@@ -103,7 +123,7 @@ def format_chat_stats(bot, chat: SpectatedChat, top):
 
 
 def format_personal_stats(chat: SpectatedChat, user_id):
-    invited_users_count = chat.get_personal_referral_records(user_id)
+    invited_users_count = chat.retrieve_personal_referral_records(user_id)
     return get_chat_lang(chat).get('personal_statistic_text').format(
         chat_title=chat.title,
         user_score=invited_users_count * settings.GEO_INVITED_USER_WEIGHT
@@ -120,12 +140,14 @@ def format_chat_settings_message(chat: SpectatedChat):
     chat_settings_message_patt = 'Selected <b>{title}</b>:\n\n' \
                                  'Status: <b>{status}</b>\n' \
                                  'Notifications: <b>{notifications}</b>\n' \
-                                 'Language: <b>{language}</b>'
+                                 'Language: <b>{language}</b>\n' \
+                                 'Timezone: <b>{timezone}</b>'
 
     return chat_settings_message_patt.format(title=chat.title,
                                              status='enabled' if chat.enabled else 'disabled',
                                              notifications='enabled' if chat.notifications else 'disabled',
-                                             language=chat.language)
+                                             language=get_chat_lang(chat).get('name'),
+                                             timezone=get_chat_tmzn(chat).get('name'))
 
 
 def generate_start_markup(chat=None, user_id=None):
@@ -190,6 +212,15 @@ def generate_languages_markup(chat: SpectatedChat, languages: [str]):
          for language in languages])
 
 
+def generate_timezones_markup(chat: SpectatedChat, timezones):
+    return InlineKeyboardMarkup.from_column(
+        [InlineKeyboardButton(
+            text=timezone['name'],
+            callback_data=settings.CALLBACK_DATA_PATTERNS['PICK_TIMEZONE'].format(
+                chat_id=chat.chat_id, timezone_shortcut=timezone['shortcut']))
+         for timezone in timezones])
+
+
 def generate_chat_settings_markup(chat: SpectatedChat):
     buttons = []
 
@@ -223,6 +254,12 @@ def generate_chat_settings_markup(chat: SpectatedChat):
         InlineKeyboardButton(
             text='Change a language',
             callback_data=settings.CALLBACK_DATA_PATTERNS['CHANGE_LANGUAGE'].format(
+                chat_id=chat.chat_id)))
+
+    buttons.append(
+        InlineKeyboardButton(
+            text='Change a timezone',
+            callback_data=settings.CALLBACK_DATA_PATTERNS['CHANGE_TIMEZONE'].format(
                 chat_id=chat.chat_id)))
 
     buttons.append(

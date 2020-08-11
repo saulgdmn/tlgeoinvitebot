@@ -54,6 +54,8 @@ def main():
                                         pattern=settings.CALLBACK_DATA_REGEX['DISABLE_NOTIFICATIONS']))
     dp.add_handler(CallbackQueryHandler(callback=handlers.change_language_callback,
                                         pattern=settings.CALLBACK_DATA_REGEX['CHANGE_LANGUAGE']))
+    dp.add_handler(CallbackQueryHandler(callback=handlers.change_timezone_callback,
+                                        pattern=settings.CALLBACK_DATA_REGEX['CHANGE_TIMEZONE']))
     dp.add_handler(CallbackQueryHandler(callback=handlers.send_notification_callback,
                                         pattern=settings.CALLBACK_DATA_REGEX['SEND_NOTIFICATION']))
     dp.add_handler(CallbackQueryHandler(callback=handlers.drop_stats_callback,

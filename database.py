@@ -15,6 +15,7 @@ class SpectatedChat(BaseModel):
     title = peewee.CharField()
     invite_link = peewee.CharField(null=True, default=None)
     language = peewee.CharField(null=True, default=None)
+    timezone = peewee.CharField(null=True, default=None)
     notifications = peewee.BooleanField(default=False)
     enabled = peewee.BooleanField(default=False)
 
@@ -27,10 +28,12 @@ class SpectatedChat(BaseModel):
         except peewee.DoesNotExist:
             return False
 
-    def add_to_spectated(chat_id, title, invite_link=None, language='en', notifications=False, enabled=False):
+    def add_to_spectated(chat_id, title, invite_link=None, language='en', timezone='utc', notifications=False,
+                         enabled=False):
         title = bytes(title, 'utf-8').decode('utf-8', 'ignore')
-        return SpectatedChat.create(chat_id=chat_id, title=title, invite_link=invite_link, language=language,
-                                    notifications=notifications, enabled=enabled)
+        return SpectatedChat.create(
+            chat_id=chat_id, title=title, invite_link=invite_link, language=language, timezone=timezone,
+            notifications=notifications, enabled=enabled)
 
     def remove_from_spectated(chat_id):
         ReferralRecord.delete().where(ReferralRecord.chat_id == chat_id).execute()
@@ -65,15 +68,13 @@ class SpectatedChat(BaseModel):
         results.sort(key=lambda x: x['invited_users_count'], reverse=True)
         return results
 
-
-    def get_personal_referral_records(self, from_user):
+    def retrieve_personal_referral_records(self, from_user):
         return ReferralRecord\
             .select()\
             .where(ReferralRecord.chat_id == self.chat_id,
                    ReferralRecord.from_user == from_user,
                    ReferralRecord.joined_chat == True)\
             .count()
-
 
     def get_chats_list(enabled=None):
         if enabled is None:
@@ -99,6 +100,11 @@ class SpectatedChat(BaseModel):
 
     def update_language(self, language='en'):
         self.language = language
+        self.save()
+        return True
+
+    def update_timezone(self, timezone='en'):
+        self.timezone = timezone
         self.save()
         return True
 

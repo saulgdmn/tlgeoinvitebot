@@ -180,8 +180,35 @@ def pick_language_callback(update: Update, context: CallbackContext):
         log.info('pick_language_callback chat not founded: {}'.format(chat_id))
         return
 
-    language = context.match.groupdict().get('language_shortcut', 'en')
+    language = context.match.groupdict().get('language_shortcut')
     chat.update_language(language)
+
+    update.effective_message.edit_text(
+        text=format_chat_settings_message(chat), reply_markup=generate_chat_settings_markup(chat), parse_mode='HTML')
+
+
+def change_timezone_callback(update: Update, context: CallbackContext):
+    chat_id = context.match.groupdict().get('chat_id', None)
+    chat = SpectatedChat.get_by_chat_id(chat_id)
+    if chat is None:
+        log.info('change_timezone_callback chat not founded: {}'.format(chat_id))
+        return
+
+    update.effective_message.edit_text(
+        text='Choose a timezone for <b>{chat_title}</b>'.format(chat_title=chat.title),
+        reply_markup=generate_timezones_markup(chat, settings.CONFIG['TIMEZONES']),
+        parse_mode='HTML')
+
+
+def pick_timezone_callback(update: Update, context: CallbackContext):
+    chat_id = context.match.groupdict().get('chat_id', None)
+    chat = SpectatedChat.get_by_chat_id(chat_id)
+    if chat is None:
+        log.info('pick_timezone_callback chat not founded: {}'.format(chat_id))
+        return
+
+    timezone = context.match.groupdict().get('timezone_shortcut')
+    chat.update_timezone(timezone)
 
     update.effective_message.edit_text(
         text=format_chat_settings_message(chat), reply_markup=generate_chat_settings_markup(chat), parse_mode='HTML')
