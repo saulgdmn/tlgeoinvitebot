@@ -157,8 +157,8 @@ def disable_notifications_callback(update: Update, context: CallbackContext):
         log.info('disable_notifications_callback chat not founded: {}'.format(chat_id))
         return
 
-    job = context.job_queue.get_jobs_by_name(name=chat.title)[0]
-    job.schedule_removal()
+    for job in context.job_queue.get_jobs_by_name(name=chat.title):
+        job.schedule_removal()
 
     chat.update_notifications(False)
     update.effective_message.edit_text(
