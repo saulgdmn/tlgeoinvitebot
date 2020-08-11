@@ -106,7 +106,7 @@ def format_personal_stats(chat: SpectatedChat, user_id):
     invited_users_count = chat.get_personal_referral_records(user_id)
     return get_chat_lang(chat).get('personal_statistic_text').format(
         chat_title=chat.title,
-        user_score=invited_users_count * settings.GEO_INVITED_USER_WEIGHT
+        user_score='\n'.join('+{}'.format(settings.GEO_INVITED_USER_WEIGHT) for x in range(invited_users_count))
     )
 
 
