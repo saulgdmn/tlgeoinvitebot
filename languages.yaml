@@ -123,6 +123,6 @@
     Total firneds invited: <b>{total_invited_users_count}</b>
 
   personal_statistic_text: |
-    Your personal statistic for <b>{chat_title}</b>:
+    (hindi)Your personal statistic for <b>{chat_title}</b>:
 
     <b>{user_score}</b> geo
