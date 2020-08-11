@@ -388,7 +388,7 @@ def left_chat_member_handler(update: Update, context: CallbackContext):
 
 
 def on_notification_callback(context: CallbackContext):
-    chat_id = context.job_queue.context
+    chat_id = context.context
     chat = SpectatedChat.get_by_chat_id(chat_id)
     if chat is None:
         log.info('on_notification_callback chat not founded: {}'.format(chat_id))
