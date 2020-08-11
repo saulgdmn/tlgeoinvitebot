@@ -103,7 +103,7 @@ class SpectatedChat(BaseModel):
         self.save()
         return True
 
-    def update_timezone(self, timezone='en'):
+    def update_timezone(self, timezone='utc'):
         self.timezone = timezone
         self.save()
         return True

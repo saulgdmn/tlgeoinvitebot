@@ -64,7 +64,7 @@ def main():
                                         pattern=settings.CALLBACK_DATA_REGEX['SETTINGS_BACK']))
     dp.add_handler(CallbackQueryHandler(callback=handlers.pick_language_callback,
                                         pattern=settings.CALLBACK_DATA_REGEX['PICK_LANGUAGE']))
-    dp.add_handler(CallbackQueryHandler(callback=handlers.change_timezone_callback,
+    dp.add_handler(CallbackQueryHandler(callback=handlers.pick_timezone_callback,
                                         pattern=settings.CALLBACK_DATA_REGEX['PICK_TIMEZONE']))
     dp.add_handler(CallbackQueryHandler(callback=handlers.generate_ref_link_callback,
                                         pattern=settings.CALLBACK_DATA_REGEX['GENERATE_REF_LINK']))
