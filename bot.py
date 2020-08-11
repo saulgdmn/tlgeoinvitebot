@@ -50,12 +50,16 @@ def main():
                                         pattern=settings.CALLBACK_DATA_REGEX['CHANGE_LANGUAGE']))
     dp.add_handler(CallbackQueryHandler(callback=handlers.send_notification_callback,
                                         pattern=settings.CALLBACK_DATA_REGEX['SEND_NOTIFICATION']))
+    dp.add_handler(CallbackQueryHandler(callback=handlers.drop_stats_callback,
+                                        pattern=settings.CALLBACK_DATA_REGEX['DROP_STATS']))
     dp.add_handler(CallbackQueryHandler(callback=handlers.settings_back_callback,
                                         pattern=settings.CALLBACK_DATA_REGEX['SETTINGS_BACK']))
     dp.add_handler(CallbackQueryHandler(callback=handlers.pick_language_callback,
                                         pattern=settings.CALLBACK_DATA_REGEX['PICK_LANGUAGE']))
     dp.add_handler(CallbackQueryHandler(callback=handlers.generate_ref_link_callback,
                                         pattern=settings.CALLBACK_DATA_REGEX['GENERATE_REF_LINK']))
+    dp.add_handler(CallbackQueryHandler(callback=handlers.personal_stats_callback,
+                                        pattern=settings.CALLBACK_DATA_REGEX['PERSONAL_STATS']))
 
     dp.add_handler(InlineQueryHandler(handlers.inline_query_handler))
 

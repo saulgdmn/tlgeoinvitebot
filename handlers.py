@@ -175,16 +175,31 @@ def send_notification_callback(update: Update, context: CallbackContext):
         log.info('send_notification_callback chat not founded: {}'.format(chat_id))
         return
 
-    formatted_chat_notification = format_chat_notification(
+    formatted_chat_statistic = format_chat_stats(
         bot=context.bot, chat=chat, top=settings.GEO_RATING_USERS_COUNT)
-    if formatted_chat_notification is None:
-        update.callback_query.answer(text='Notification is not available!', show_alert=True)
-        return
-
-    context.bot.send_message(
-        chat_id=chat_id, text=formatted_chat_notification, reply_markup=generate_start_markup(chat), parse_mode='HTML')
+    if formatted_chat_statistic is None:
+        context.bot.send_message(
+            chat_id=chat_id, text=format_chat_notification(chat), reply_markup=generate_start_markup(chat),
+            parse_mode='HTML')
+    else:
+        context.bot.send_message(
+            chat_id=chat_id,
+            text='{}\n{}'.format(format_chat_notification(chat), formatted_chat_statistic),
+            reply_markup=generate_start_markup(chat),
+            parse_mode='HTML')
 
     update.callback_query.answer()
+
+
+def drop_stats_callback(update: Update, context: CallbackContext):
+    chat_id = context.match.groupdict().get('chat_id', None)
+    chat = SpectatedChat.get_by_chat_id(chat_id)
+    if chat is None:
+        log.info('drop_stats_callback chat not founded: {}'.format(chat_id))
+        return
+
+    chat.drop_referral_records()
+    update.callback_query.answer('Statistic was dropped.')
 
 
 def settings_back_callback(update: Update, context: CallbackContext):
@@ -204,6 +219,18 @@ def generate_ref_link_callback(update: Update, context: CallbackContext):
         text=get_chat_lang(chat).get('referral_link_text').format(
             referral_link=generate_deeplinking_link(chat_id=chat.chat_id, user_id=user_id)),
         parse_mode='HTML', disable_web_page_preview=True)
+    update.callback_query.answer()
+
+
+def personal_stats_callback(update: Update, context: CallbackContext):
+    chat_id = context.match.groupdict().get('chat_id', None)
+    user_id = context.match.groupdict().get('user_id', None)
+    chat = SpectatedChat.get_by_chat_id(chat_id)
+    if chat is None:
+        log.info('personal_stats_callback chat not founded: {}'.format(chat_id))
+        return
+
+    update.effective_chat.send_message(text=format_personal_stats(chat, user_id), parse_mode='HTML')
     update.callback_query.answer()
 
 
@@ -328,11 +355,15 @@ def on_notification_callback(context: CallbackContext):
         log.info('on_notification_callback chat not founded: {}'.format(chat_id))
         return
 
-    formatted_chat_notification = format_chat_notification(
+    formatted_chat_statistic = format_chat_stats(
         bot=context.bot, chat=chat, top=settings.GEO_RATING_USERS_COUNT)
-    if formatted_chat_notification is None:
-        log.info('Unable to format statistic.')
-        return
-
-    context.bot.send_message(
-        chat_id=chat_id, text=formatted_chat_notification, reply_markup=generate_start_markup(chat), parse_mode='HTML')
+    if formatted_chat_statistic is None:
+        context.bot.send_message(
+            chat_id=chat_id, text=format_chat_notification(chat), reply_markup=generate_start_markup(chat),
+            parse_mode='HTML')
+    else:
+        context.bot.send_message(
+            chat_id=chat_id,
+            text='{}\n{}'.format(format_chat_notification(chat), formatted_chat_statistic),
+            reply_markup=generate_start_markup(chat),
+            parse_mode='HTML')

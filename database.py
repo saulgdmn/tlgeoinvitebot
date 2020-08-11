@@ -65,6 +65,11 @@ class SpectatedChat(BaseModel):
         results.sort(key=lambda x: x['invited_users_count'], reverse=True)
         return results
 
+
+    def get_personal_referral_records(self, from_user):
+        return ReferralRecord.select().where(ReferralRecord.from_user == from_user).count()
+
+
     def get_chats_list(enabled=None):
         if enabled is None:
             query = SpectatedChat.select()

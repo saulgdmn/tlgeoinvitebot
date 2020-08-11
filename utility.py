@@ -78,13 +78,14 @@ def administrators_only(func):
     return wrapped
 
 
-def format_chat_notification(bot, chat: SpectatedChat, top):
+def format_chat_stats(bot, chat: SpectatedChat, top):
     """Return a formatted string of user referral statistic"""
 
-    chat_lang = get_chat_lang(chat)
     user_stats = chat.retrieve_referral_records()
     if user_stats is None:
         return None
+
+    chat_lang = get_chat_lang(chat)
 
     formatted_users = []
     for key, stat in enumerate(user_stats[:top]):
@@ -95,11 +96,24 @@ def format_chat_notification(bot, chat: SpectatedChat, top):
                 user_score=stat['invited_users_count'] * settings.GEO_INVITED_USER_WEIGHT, user_mention=user.mention_html()))
 
     total_invited_users_count = sum([stat['invited_users_count'] for stat in user_stats])
-    return chat_lang.get('notification_text').format(
-        invite_button_text=chat_lang.get('invite_button_text'),
+    return chat_lang.get('statistic_text').format(
         chat_title=chat.title,
         formatted_users='\n'.join(formatted_users),
         total_invited_users_count=total_invited_users_count)
+
+
+def format_personal_stats(chat: SpectatedChat, user_id):
+    invited_users_count = chat.get_personal_referral_records(user_id)
+    return get_chat_lang().get('personal_statistic_text').format(
+        chat_title=chat.title,
+        invited_users_count=invited_users_count
+    )
+
+
+def format_chat_notification(chat: SpectatedChat):
+    return get_chat_lang(chat).get('notification_text').format(
+        invite_button_text=get_chat_lang(chat).get('invite_button_text')
+    )
 
 
 def format_chat_settings_message(chat: SpectatedChat):
@@ -134,6 +148,12 @@ def generate_start_markup(chat=None, user_id=None):
             InlineKeyboardButton(
                 text=lang.get('referral_link_button_text'),
                 callback_data=settings.CALLBACK_DATA_PATTERNS['GENERATE_REF_LINK'].format(
+                    chat_id=chat.chat_id, user_id=user_id)))
+
+        buttons.append(
+            InlineKeyboardButton(
+                text=lang.get('personal_statistic_button_text'),
+                callback_data=settings.CALLBACK_DATA_PATTERNS['PERSONAL_STATS'].format(
                     chat_id=chat.chat_id, user_id=user_id)))
 
     buttons.append(InlineKeyboardButton(text=lang.get('website_button_text'), url=settings.GEO_WEBSITE_LINK))
@@ -215,6 +235,12 @@ def generate_chat_settings_markup(chat: SpectatedChat):
         InlineKeyboardButton(
             text='Send notification',
             callback_data=settings.CALLBACK_DATA_PATTERNS['SEND_NOTIFICATION'].format(
+                chat_id=chat.chat_id)))
+
+    buttons.append(
+        InlineKeyboardButton(
+            text='Drop statistic',
+            callback_data=settings.CALLBACK_DATA_PATTERNS['DROP_STATS'].format(
                 chat_id=chat.chat_id)))
 
     buttons.append(

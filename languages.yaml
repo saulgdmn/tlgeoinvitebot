@@ -8,6 +8,7 @@
   website_button_text: "Visit website"
   app_button_text: "Download GeoCash"
   referral_link_button_text: "Personal ref. link"
+  personal_stats_button_text: "Personal statistic"
 
   cant_invite_yourself_text: "Comeon! You can't invite yourself :)"
   is_already_member_text: "You're already a member of the Group!"
@@ -50,11 +51,17 @@
     GEO INVITE contest is now Live on this group.
     If you want to participate, please click on <b>{invite_button_text}</b> button.
 
+  statistic_text: |
     Statistic for <b>{chat_title}</b>:
 
     {formatted_users}
 
     Total invited Friends: <b>{total_invited_users_count}</b>
+
+  personal_statistic_text: |
+    Your personal statistic for <b>{chat_title}</b>:
+
+    {invited_users_count} friends invited!
 
 - name: "Hindi"
   shortcut: "hi"
@@ -66,6 +73,7 @@
   website_button_text: "Visit website"
   app_button_text: "Download app"
   referral_link_button_text: "Personal ref. link"
+  personal_stats_button_text: "Personal statistic"
 
   cant_invite_yourself_text: "are bhai. Khud ko invite nahi karna hai"
   is_already_member_text: "Tum to pehle se he member ho is group ke!"
@@ -107,8 +115,14 @@
     Participate karna hai to Press <b>'{invite_button_text}'</b> button.
     5 GeoCash har invite ka
 
+  statistic_text: |
     Status ye hai for <b>{chat_title}</b>:
 
     {formatted_users}
 
     Total firneds invited: <b>{total_invited_users_count}</b>
+
+  personal_statistic_text: |
+    Your personal statistic for <b>{chat_title}</b>:
+
+    {invited_users_count} friends invited!
