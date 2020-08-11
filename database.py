@@ -69,7 +69,9 @@ class SpectatedChat(BaseModel):
     def get_personal_referral_records(self, from_user):
         return ReferralRecord\
             .select()\
-            .where(ReferralRecord.from_user == from_user, ReferralRecord.joined_chat == True)\
+            .where(SpectatedChat.chat_id == self.chat_id,
+                   ReferralRecord.from_user == from_user,
+                   ReferralRecord.joined_chat == True)\
             .count()
 
 
