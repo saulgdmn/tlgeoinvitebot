@@ -125,4 +125,4 @@
   personal_statistic_text: |
     Your personal statistic for <b>{chat_title}</b>:
 
-    {invited_users_count} friends invited!
+    <b>{user_score}</b> geo
