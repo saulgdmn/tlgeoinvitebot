@@ -33,6 +33,12 @@ def main():
     dp.add_handler(CommandHandler(command="start",
                                   callback=handlers.start_command,
                                   filters=Filters.private))
+    dp.add_handler(CommandHandler(command="stats",
+                                  callback=handlers.stats_command,
+                                  filters=Filters.private))
+    dp.add_handler(CommandHandler(command="referral_link",
+                                  callback=handlers.referral_link_command,
+                                  filters=Filters.private))
 
     dp.add_handler(CommandHandler("chats", handlers.chats_command_handler, filters=Filters.private))
 
@@ -58,8 +64,6 @@ def main():
                                         pattern=settings.CALLBACK_DATA_REGEX['PICK_LANGUAGE']))
     dp.add_handler(CallbackQueryHandler(callback=handlers.generate_ref_link_callback,
                                         pattern=settings.CALLBACK_DATA_REGEX['GENERATE_REF_LINK']))
-    dp.add_handler(CallbackQueryHandler(callback=handlers.personal_stats_callback,
-                                        pattern=settings.CALLBACK_DATA_REGEX['PERSONAL_STATS']))
 
     dp.add_handler(InlineQueryHandler(handlers.inline_query_handler))
 

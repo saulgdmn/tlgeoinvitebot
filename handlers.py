@@ -11,6 +11,25 @@ from utility import *
 from database import SpectatedChat, ReferralRecord
 
 
+def stats_command(update: Update, context: CallbackContext):
+    user_id = update.effective_user.id
+
+    for chat in SpectatedChat.get_chats_list(enabled=True):
+        if is_member(bot=context.bot, chat_id=chat.chat_id, user_id=user_id):
+            update.effective_chat.send_message(text=format_personal_stats(chat, user_id), parse_mode='HTML')
+
+
+def referral_link_command(update: Update, context: CallbackContext):
+    user_id = update.effective_user.id
+
+    for chat in SpectatedChat.get_chats_list(enabled=True):
+        if is_member(bot=context.bot, chat_id=chat.chat_id, user_id=user_id):
+            update.effective_chat.send_message(
+                text=get_chat_lang(chat).get('referral_link_text').format(
+                    referral_link=generate_deeplinking_link(chat_id=chat.chat_id, user_id=user_id)),
+                parse_mode='HTML', disable_web_page_preview=True)
+
+
 def start_command(update: Update, context: CallbackContext):
     """Handle the command /start issued in private chat."""
 
@@ -219,18 +238,6 @@ def generate_ref_link_callback(update: Update, context: CallbackContext):
         text=get_chat_lang(chat).get('referral_link_text').format(
             referral_link=generate_deeplinking_link(chat_id=chat.chat_id, user_id=user_id)),
         parse_mode='HTML', disable_web_page_preview=True)
-    update.callback_query.answer()
-
-
-def personal_stats_callback(update: Update, context: CallbackContext):
-    chat_id = context.match.groupdict().get('chat_id', None)
-    user_id = context.match.groupdict().get('user_id', None)
-    chat = SpectatedChat.get_by_chat_id(chat_id)
-    if chat is None:
-        log.info('personal_stats_callback chat not founded: {}'.format(chat_id))
-        return
-
-    update.effective_chat.send_message(text=format_personal_stats(chat, user_id), parse_mode='HTML')
     update.callback_query.answer()
 
 

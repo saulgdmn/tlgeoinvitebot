@@ -37,7 +37,6 @@ CALLBACK_DATA_PATTERNS = {
     'DEEPLINKING_LINK': 'dlnk_{chat_id}_{user_id}',
 
     'GENERATE_REF_LINK': 'rlnk_{chat_id}_{user_id}',
-    'PERSONAL_STATS': 'psts_{chat_id}_{user_id}'
 }
 
 CALLBACK_DATA_REGEX = {
@@ -56,5 +55,4 @@ CALLBACK_DATA_REGEX = {
 
     'DEEPLINKING_LINK': r'^\/start dlnk_(?P<chat_id>[\-\d]+)_(?P<user_id>[\-\d]+)$',
     'GENERATE_REF_LINK': r'^rlnk_(?P<chat_id>[\-\d]+)_(?P<user_id>[\-\d]+)$',
-    'PERSONAL_STATS': r'^psts_(?P<chat_id>[\-\d]+)_(?P<user_id>[\-\d]+)$'
 }
