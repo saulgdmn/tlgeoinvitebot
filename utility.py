@@ -104,7 +104,7 @@ def format_chat_stats(bot, chat: SpectatedChat, top):
 
 def format_personal_stats(chat: SpectatedChat, user_id):
     invited_users_count = chat.get_personal_referral_records(user_id)
-    return get_chat_lang().get('personal_statistic_text').format(
+    return get_chat_lang(chat).get('personal_statistic_text').format(
         chat_title=chat.title,
         invited_users_count=invited_users_count
     )
