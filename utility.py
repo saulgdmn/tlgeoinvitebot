@@ -1,11 +1,14 @@
 import logging
+import datetime
+import re
 from functools import wraps
 
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
+from telegram.ext import JobQueue
 import yaml
 
 import settings
-from database import SpectatedChat, ReferralRecord
+from database import SpectatedChat
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.DEBUG)
@@ -34,7 +37,6 @@ def get_chat_tmzn(chat: SpectatedChat):
 
 
 def load_config(path):
-
     try:
         with open(path, 'r', encoding='utf8') as f:
             return yaml.load(f)
@@ -44,7 +46,6 @@ def load_config(path):
 
 
 def load_languages(path):
-
     try:
         with open(path, 'r', encoding='utf8') as f:
             return yaml.load(f)
@@ -89,6 +90,31 @@ def administrators_only(func):
             return
         return func(update, context, *args, **kwargs)
     return wrapped
+
+
+def run_notification_job(chat: SpectatedChat, job_queue: JobQueue, callback):
+    for h in range(settings.NOTIFICATION_START_TIME, settings.NOTIFICATION_END_TIME, 1):
+        tmzn = get_chat_tmzn(chat)
+
+        m = re.match(
+            pattern=r'^(?P<div>\-|\+)(?P<h>[\d]{2}):(?P<m>[\d]{2})$', string=tmzn['offset'])
+        if m is None:
+            log.info('run_notification_job failed: wrong timezone[offset]')
+            return
+
+        if m.groupdict()['div'] == '+':
+            offset = datetime.timedelta(hours=int(m.groupdict()['h']), minutes=int(m.groupdict()['m']))
+        else:
+            offset = -datetime.timedelta(hours=int(m.groupdict()['h']), minutes=int(m.groupdict()['m']))
+
+        j = JobQueue.run_daily(
+            name=chat.title, callback=callback, time=datetime.time(hour=h, tzinfo=datetime.timezone(offset=offset)),
+            context=chat.chat_id)
+
+def setup_notification_jobs(job_queue: JobQueue, callback):
+
+    for chat in SpectatedChat.get_chats_list(enabled=True):
+        run_notification_job(chat=chat, job_queue=job_queue, callback=callback)
 
 
 def generate_deeplinking_link(chat_id, user_id):

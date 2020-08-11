@@ -6,10 +6,10 @@ from telegram.ext import Updater, CommandHandler, InlineQueryHandler, CallbackQu
 
 import handlers
 import settings
-import utility
 import database
 
 from utility import log
+from utility import setup_notification_jobs
 
 PORT = int(os.environ.get('PORT', '8443'))
 
@@ -74,6 +74,8 @@ def main():
     dp.add_handler(MessageHandler(Filters.status_update.chat_created, handlers.chat_created_handler))
     dp.add_handler(MessageHandler(Filters.status_update.new_chat_members, handlers.new_chat_members_handler))
     dp.add_handler(MessageHandler(Filters.status_update.left_chat_member, handlers.left_chat_member_handler))
+
+    setup_notification_jobs(job_queue=updater.job_queue, callback=handlers.on_notification_callback)
 
     database.database_startup()
 

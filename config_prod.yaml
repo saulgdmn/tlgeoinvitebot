@@ -1,0 +1,20 @@
+BOT_USERNAME: "referraldevbot"
+BOT_API_TOKEN: "1300316869:AAHFJR9LFLr7wqKM-XOrRHJw1H9ugQX79KA"
+
+GEO_WEBSITE_LINK: "https://geodb.com/"
+GEO_APP_LINK: "https://downloads.geodb.com/"
+
+GEO_INVITED_USER_WEIGHT: 5
+GEO_RATING_USERS_COUNT: 5
+
+NOTIFICATION_START_TIME: 8
+NOTIFICATION_END_TIME: 23
+
+TIMEZONES:
+  - name: "UTC"
+    shortcut: "utc"
+    offset: "+00:00"
+
+  - name: "India"
+    shortcut: "in"
+    offset: "+05:30"

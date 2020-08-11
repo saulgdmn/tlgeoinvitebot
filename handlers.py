@@ -144,6 +144,8 @@ def enable_notifications_callback(update: Update, context: CallbackContext):
         return
 
     chat.update_notifications(True)
+    run_notification_job(chat=chat, job_queue=context.job_queue, callback=on_notification_callback)
+
     update.effective_message.edit_text(
         text=format_chat_settings_message(chat), parse_mode='HTML', reply_markup=generate_chat_settings_markup(chat))
 
@@ -154,6 +156,9 @@ def disable_notifications_callback(update: Update, context: CallbackContext):
     if chat is None:
         log.info('disable_notifications_callback chat not founded: {}'.format(chat_id))
         return
+
+    job = context.job_queue.get_jobs_by_name(name=chat.title)[0]
+    job.schedule_removal()
 
     chat.update_notifications(False)
     update.effective_message.edit_text(
