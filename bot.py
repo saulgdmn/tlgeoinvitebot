@@ -1,5 +1,4 @@
 import os
-import logging
 
 from telegram.ext import Updater, CommandHandler, InlineQueryHandler, CallbackQueryHandler, \
     MessageHandler, Filters, ConversationHandler
@@ -8,7 +7,6 @@ import handlers
 import settings
 import database
 
-from utility import log
 from utility import setup_notification_jobs
 
 PORT = int(os.environ.get('PORT', '8443'))
@@ -49,11 +47,7 @@ def main():
     dp.add_handler(CommandHandler(
         command="reflink", callback=handlers.referral_link_command, filters=Filters.private))
     dp.add_handler(CommandHandler(
-        command="location", callback=handlers.location, filters=Filters.private))
-    dp.add_handler(CommandHandler(
         command="chats", callback=handlers.chats_command_handler, filters=Filters.private))
-
-    dp.add_handler(MessageHandler(filters=Filters.location, callback=handlers.handlelocation))
 
     dp.add_handler(CallbackQueryHandler(callback=handlers.pick_chat_callback,
                                         pattern=settings.CALLBACK_DATA_REGEX['PICK_CHAT']))
