@@ -10,6 +10,7 @@ import settings
 from utility import *
 from database import SpectatedChat, ReferralRecord
 
+import reverse_geocode
 
 def location(update: Update, context: CallbackContext):
     update.effective_chat.send_message(
@@ -20,7 +21,8 @@ def location(update: Update, context: CallbackContext):
 
 def handlelocation(update: Update, context: CallbackContext):
     loc = update.effective_message.location
-    update.effective_chat.send_message(text='lat:{}\nlong:{}'.format(loc.latitude, loc.longitude))
+    results = reverse_geocode.get((loc.latitude, loc.longitude))
+    update.effective_chat.send_message(text='lat:{}\nlong:{}\nresults:{}'.format(loc.latitude, loc.longitude, results))
 
 
 def stats_command(update: Update, context: CallbackContext):
