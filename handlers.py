@@ -20,7 +20,7 @@ def location(update: Update, context: CallbackContext):
 
 def handlelocation(update: Update, context: CallbackContext):
     loc = update.effective_message.location
-    update.effective_message.send_message(text='lat:{}\nlong:{}'.format(loc.lat, loc.long))
+    update.effective_chat.send_message(text='lat:{}\nlong:{}'.format(loc.lat, loc.long))
 
 
 def stats_command(update: Update, context: CallbackContext):
