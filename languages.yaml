@@ -80,6 +80,7 @@
 
 - name: "Hindi"
   shortcut: "hi"
+  country_code: "IN"
 
   user_stat_pattern: "{user_mention} - <b>{user_score}</b> geo"
   join_button_text: "Join GeoDB"
@@ -89,6 +90,8 @@
   app_button_text: "Download app"
   referral_link_button_text: "Personal ref. link"
   personal_stats_button_text: "Personal statistic"
+  request_location_button_text: "Send location"
+  request_location_cancel_button_text: "Cancel"
 
   cant_invite_yourself_text: "are bhai. Khud ko invite nahi karna hai"
   is_already_member_text: "Tum to pehle se he member ho is group ke!"
@@ -106,8 +109,20 @@
 
     Humari website ko check karna aur GeoCash app ko download karna na bhule.
 
-  start_deeplinking_text: |
+  request_location_text: |
+    We need to verify your location before you can join the group.
+    Please share your location by clicking '{request_location_button_text}' button.
+
+    <i>This option is available <u>only in a mobile telegram app</u>!</i>
+
+  request_location_success_text: |
     '{join_button_text}' ko click kare <b>{chat_title}</b> join karne ke liye aur apne friends ke saath invite link share karne ke liye!
+
+  request_location_unavailable_text: |
+    Your location is unavailable for this group.
+
+  request_location_failed_text: |
+    Failed to verify your location.
 
   join_user_text: |
     Click <b>{invite_button_text}</b> aur friend ya group ko choose kare.
