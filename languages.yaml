@@ -80,7 +80,7 @@
 
 - name: "Hindi"
   shortcut: "hi"
-  country_code: "IN"
+  country_code: "UA"
 
   user_stat_pattern: "{user_mention} - <b>{user_score}</b> geo"
   join_button_text: "Join GeoDB"
