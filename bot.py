@@ -36,8 +36,11 @@ def main():
     dp.add_handler(CommandHandler(command="stats",
                                   callback=handlers.stats_command,
                                   filters=Filters.private))
-    dp.add_handler(CommandHandler(command="referral_link",
+    dp.add_handler(CommandHandler(command="reflink",
                                   callback=handlers.referral_link_command,
+                                  filters=Filters.private))
+    dp.add_handler(CommandHandler(command="location",
+                                  callback=handlers.location,
                                   filters=Filters.private))
 
     dp.add_handler(CommandHandler("chats", handlers.chats_command_handler, filters=Filters.private))

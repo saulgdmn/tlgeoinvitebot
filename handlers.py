@@ -1,7 +1,7 @@
 from uuid import uuid4
 
 from telegram import Update
-from telegram import InlineKeyboardMarkup, InlineKeyboardButton
+from telegram import ReplyKeyboardMarkup, KeyboardButton
 from telegram import InlineQueryResultArticle, InputTextMessageContent
 
 from telegram.ext import Updater, CallbackContext
@@ -10,6 +10,13 @@ import settings
 from utility import *
 from database import SpectatedChat, ReferralRecord
 
+
+def location(update: Update, context: CallbackContext):
+    update.effective_chat.send_message(
+        text='Please, send me your location',
+        markup=ReplyKeyboardMarkup(
+            keyboard=[[KeyboardButton(text='Send location', request_location=True)]],
+            one_time_keyboard=True, resize_keyboard=True)
 
 def stats_command(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
