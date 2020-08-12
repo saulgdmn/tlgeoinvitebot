@@ -26,24 +26,22 @@ def main():
     dp = updater.dispatcher
 
     # on different commands - answer in Telegram
-    dp.add_handler(CommandHandler(command="start",
-                                  callback=handlers.start_deeplinking_command,
-                                  filters=Filters.private &
-                                          Filters.regex(settings.CALLBACK_DATA_REGEX['DEEPLINKING_LINK'])))
-    dp.add_handler(CommandHandler(command="start",
-                                  callback=handlers.start_command,
-                                  filters=Filters.private))
-    dp.add_handler(CommandHandler(command="stats",
-                                  callback=handlers.stats_command,
-                                  filters=Filters.private))
-    dp.add_handler(CommandHandler(command="reflink",
-                                  callback=handlers.referral_link_command,
-                                  filters=Filters.private))
-    dp.add_handler(CommandHandler(command="location",
-                                  callback=handlers.location,
-                                  filters=Filters.private))
+    dp.add_handler(CommandHandler(
+        command="start", callback=handlers.start_deeplinking_command,
+        filters=Filters.private &
+                Filters.regex(settings.CALLBACK_DATA_REGEX['DEEPLINKING_LINK'])))
+    dp.add_handler(CommandHandler(
+        command="start", callback=handlers.start_command, filters=Filters.private))
+    dp.add_handler(CommandHandler(
+        command="stats", callback=handlers.stats_command, filters=Filters.private))
+    dp.add_handler(CommandHandler(
+        command="reflink", callback=handlers.referral_link_command, filters=Filters.private))
+    dp.add_handler(CommandHandler(
+        command="location", callback=handlers.location, filters=Filters.private))
+    dp.add_handler(CommandHandler(
+        command="chats", callback=handlers.chats_command_handler, filters=Filters.private))
 
-    dp.add_handler(CommandHandler("chats", handlers.chats_command_handler, filters=Filters.private))
+    dp.add_handler(MessageHandler(filters=Filters.location, callback=handlers.handlelocation))
 
     dp.add_handler(CallbackQueryHandler(callback=handlers.pick_chat_callback,
                                         pattern=settings.CALLBACK_DATA_REGEX['PICK_CHAT']))

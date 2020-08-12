@@ -18,6 +18,11 @@ def location(update: Update, context: CallbackContext):
             keyboard=[[KeyboardButton(text='Send location', request_location=True)]],
             one_time_keyboard=True, resize_keyboard=True))
 
+def handlelocation(update: Update, context: CallbackContext):
+    loc = update.effective_message.location
+    update.effective_message.send_messate(text='lat:{}\nlong:{}'.format(loc.lat, loc.long))
+
+
 def stats_command(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
 
