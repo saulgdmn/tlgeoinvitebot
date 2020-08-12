@@ -6,6 +6,7 @@ from telegram import InlineQueryResultArticle, InputTextMessageContent
 
 from telegram.ext import Updater, CallbackContext, ConversationHandler
 
+import settings
 from utility import *
 from database import SpectatedChat, ReferralRecord
 
