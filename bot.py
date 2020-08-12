@@ -31,8 +31,8 @@ def main():
                         Filters.regex(settings.CALLBACK_DATA_REGEX['DEEPLINKING_LINK']))
         ],
         states={
-            settings.VERIFY_LOCATION_CONV_ID: MessageHandler(
-                filters=Filters.location, callback=handlers.request_location_verify_handler)
+            settings.VERIFY_LOCATION_CONV_ID: [MessageHandler(
+                filters=Filters.location, callback=handlers.request_location_verify_handler)]
 
         },
         fallbacks=[
