@@ -1,9 +1,9 @@
 import os
 
-import utility
+from utility import load_config, load_languages
 
-CONFIG = utility.load_config(os.getenv('CONFIG_PATH'))
-LANGUAGES = utility.load_languages(os.getenv('LANGUAGES_PATH'))
+CONFIG = load_config(os.getenv('CONFIG_PATH'))
+LANGUAGES = load_languages(os.getenv('LANGUAGES_PATH'))
 
 BOT_USERNAME = CONFIG['BOT_USERNAME']
 BOT_API_TOKEN = CONFIG['BOT_API_TOKEN']
