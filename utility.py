@@ -86,6 +86,7 @@ def is_member(bot, chat_id, user_id):
 
 def verify_location(long, lat, chat: SpectatedChat):
     loc = reverse_geocode.get((long, lat))
+    log.info(loc)
     return loc.get('code') == get_chat_lang(chat).get('country_code')
 
 
