@@ -1,8 +1,8 @@
 import os
 import logging
 
-from telegram.ext import Updater, CommandHandler, InlineQueryHandler, CallbackQueryHandler,\
-    MessageHandler, Filters
+from telegram.ext import Updater, CommandHandler, InlineQueryHandler, CallbackQueryHandler, \
+    MessageHandler, Filters, ConversationHandler
 
 import handlers
 import settings
@@ -21,15 +21,27 @@ def main():
     # Post version 12 this will no longer be necessary
     updater = Updater(token=settings.BOT_API_TOKEN, use_context=True)
 
-
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
 
     # on different commands - answer in Telegram
-    dp.add_handler(CommandHandler(
-        command="start", callback=handlers.start_deeplinking_command,
-        filters=Filters.private &
-                Filters.regex(settings.CALLBACK_DATA_REGEX['DEEPLINKING_LINK'])))
+    dp.add_handler(ConversationHandler(
+        entry_points=[
+            CommandHandler(
+                command="start", callback=handlers.request_location_handler,
+                filters=Filters.private &
+                        Filters.regex(settings.CALLBACK_DATA_REGEX['DEEPLINKING_LINK']))
+        ],
+        states={
+            settings.VERIFY_LOCATION_CONV_ID: MessageHandler(
+                filters=Filters.location, callback=handlers.request_location_verify_handler)
+
+        },
+        fallbacks=[
+            MessageHandler(
+                filters=Filters.regex('Cancel'), callback=handlers.request_location_failed_handler)
+        ]))
+
     dp.add_handler(CommandHandler(
         command="start", callback=handlers.start_command, filters=Filters.private))
     dp.add_handler(CommandHandler(
@@ -93,6 +105,7 @@ def main():
     """
     updater.idle()
     database.database_closeup()
+
 
 if __name__ == '__main__':
     main()

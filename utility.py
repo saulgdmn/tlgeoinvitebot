@@ -4,8 +4,11 @@ import re
 from functools import wraps
 
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
+from telegram import ReplyKeyboardMarkup, KeyboardButton
 from telegram.ext import JobQueue
+
 import yaml
+import reverse_geocode
 
 import settings
 from database import SpectatedChat
@@ -79,6 +82,11 @@ def is_member(bot, chat_id, user_id):
         return False
 
     return member.status in ['member', 'creator', 'administrator', 'restricted']
+
+
+def verify_location(long, lat, chat: SpectatedChat):
+    loc = reverse_geocode.get((long, lat))
+    return loc.get('code') == get_chat_lang(chat).get('country_code')
 
 
 def administrators_only(func):
@@ -203,6 +211,17 @@ def generate_start_markup(chat=None, user_id=None):
     buttons.append(InlineKeyboardButton(text=lang.get('app_button_text'), url=settings.GEO_APP_LINK))
 
     return InlineKeyboardMarkup.from_column(buttons)
+
+
+def generate_request_location_markup(chat: SpectatedChat):
+    return ReplyKeyboardMarkup(
+            keyboard=[[
+                KeyboardButton(
+                    text=get_chat_lang(chat).get('request_location_button_text'), request_location=True),
+                KeyboardButton(
+                    text=get_chat_lang(chat).get('request_location_cancel_button_text')
+                )]],
+            one_time_keyboard=True, resize_keyboard=True)
 
 
 def generate_join_markup(chat: SpectatedChat):

@@ -4,25 +4,10 @@ from telegram import Update
 from telegram import ReplyKeyboardMarkup, KeyboardButton
 from telegram import InlineQueryResultArticle, InputTextMessageContent
 
-from telegram.ext import Updater, CallbackContext
+from telegram.ext import Updater, CallbackContext, ConversationHandler
 
-import settings
 from utility import *
 from database import SpectatedChat, ReferralRecord
-
-import reverse_geocode
-
-def location(update: Update, context: CallbackContext):
-    update.effective_chat.send_message(
-        text='Please, send me your location',
-        reply_markup=ReplyKeyboardMarkup(
-            keyboard=[[KeyboardButton(text='Send location', request_location=True)]],
-            one_time_keyboard=True, resize_keyboard=True))
-
-def handlelocation(update: Update, context: CallbackContext):
-    loc = update.effective_message.location
-    results = reverse_geocode.get((loc.latitude, loc.longitude))
-    update.effective_chat.send_message(text='lat:{}\nlong:{}\nresults:{}'.format(loc.latitude, loc.longitude, results))
 
 
 def stats_command(update: Update, context: CallbackContext):
@@ -53,43 +38,75 @@ def start_command(update: Update, context: CallbackContext):
         reply_markup=generate_start_markup(), parse_mode='HTML')
 
 
-def start_deeplinking_command(update: Update, context: CallbackContext):
+def request_location_handler(update: Update, context: CallbackContext):
     """Handle the command /start issued in private chat."""
+
+    chat_id = context.match.groupdict().get('chat_id', None)
+    user_id = context.match.groupdict().get('user_id', None)
+
+    context.chat_data['chat_id'] = chat_id
+    context.chat_data['user_id'] = user_id
+
+    chat = SpectatedChat.get_by_chat_id(chat_id)
+
+    update.effective_chat.send_message(
+        text=get_chat_lang(chat).get('request_location_text').format(
+            request_location_button_text=get_lang('en').get('request_location_button_text')),
+        reply_markup=generate_request_location_markup(chat), parse_mode='HTML')
+
+    return settings.VERIFY_LOCATION_CONV_ID
+
+
+def request_location_verify_handler(update: Update, context: CallbackContext):
+
+    invited_chat_id = context.chat_data.get('chat_id', None)
+    invited_chat = SpectatedChat.get_by_chat_id(invited_chat_id)
+    chat_lang = get_chat_lang(invited_chat)
+
+    location = update.effective_message.location
+
+    if verify_location(location.longitude, location.latitude, invited_chat) is False:
+        update.effective_chat.send_message(text=chat_lang.get('request_location_unavailable_text'))
+        return ConversationHandler.END
 
     bot = context.bot
     message = update.effective_message
 
-    from_user = context.match.groupdict().get('user_id', None)
+    from_user = context.chat_data.get('user_id', None)
     to_user = message.from_user.id
-
-    invited_chat_id = context.match.groupdict().get('chat_id', None)
-    invited_chat = SpectatedChat.get_by_chat_id(invited_chat_id)
-    chat_lang = get_chat_lang(invited_chat)
 
     # check if inviting user is an invited user
     if int(from_user) == int(to_user):
         update.effective_chat.send_message(text=chat_lang.get('cant_invite_yourself_text'))
-        log.info('{} amd {}'.format(from_user, to_user))
-        return
+        return ConversationHandler.END
 
     # check if an invited user is already a member of the chat
     if is_member(bot=bot, chat_id=invited_chat_id, user_id=to_user):
         update.effective_chat.send_message(text=chat_lang.get('is_already_member_text'))
-        return
+        return ConversationHandler.END
 
     # check if a user referral record for an invited user is already exists
     # and create if not
     record = ReferralRecord.get_by_to_user(chat_id=invited_chat_id, to_user=to_user)
     if record is None:
-        record = ReferralRecord.add(chat_id=invited_chat_id, to_user_chat_id=message.chat.id, from_user=from_user,
-                                    to_user=to_user)
+        record = ReferralRecord.add(
+            chat_id=invited_chat_id, to_user_chat_id=message.chat.id, from_user=from_user, to_user=to_user)
 
     update.effective_chat.send_message(
         reply_markup=generate_join_markup(invited_chat),
-        text=chat_lang.get('start_deeplinking_text').format(
+        text=chat_lang.get('request_location_success_text').format(
             chat_title=invited_chat.title,
             join_button_text=chat_lang.get('join_button_text')),
         parse_mode='HTML')
+
+    return ConversationHandler.END
+
+
+def request_location_failed_handler(update: Update, context: CallbackContext):
+    chat_id = context.chat_data.get('chat_id', None)
+    chat = SpectatedChat.get_by_chat_id(chat_id)
+    update.effective_chat.send_message(text=get_chat_lang(chat).get('request_location_failed_text'))
+    return ConversationHandler.END
 
 
 @administrators_only

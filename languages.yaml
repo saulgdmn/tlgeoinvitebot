@@ -1,5 +1,6 @@
 - name: "English"
   shortcut: "en"
+  country_code: "UA"
 
   user_stat_pattern: "{user_mention} - <b>{user_score}</b> GeoCash"
   join_button_text: "Join GeoDB"
@@ -9,6 +10,8 @@
   app_button_text: "Download GeoCash"
   referral_link_button_text: "Personal ref. link"
   personal_stats_button_text: "Personal statistic"
+  request_location_button_text: "Send location"
+  request_location_cancel_button_text: "Cancel"
 
   cant_invite_yourself_text: "Comeon! You can't invite yourself :)"
   is_already_member_text: "You're already a member of the Group!"
@@ -26,8 +29,20 @@
 
     Don’t forget to ask them to visit GeoDB website and download GeoCash app.
 
-  start_deeplinking_text: |
+  request_location_text: |
+    We need to verify your location before you can join the group.
+    Please share your location by clicking '{request_location_button_text}' button.
+
+    <i>This option is available <u>only in a mobile telegram app</u>!</i>
+
+  request_location_success_text: |
     Thank you! Click '{join_button_text}' below to join <b>{chat_title}</b> and share your unique invite link with your friends!
+
+  request_location_unavailable_text: |
+    Your location is unavailable for this group.
+
+  request_location_failed_text: |
+    Failed to verify your location.
 
   join_user_text: |
     Congratulations! You have joined <b>{chat_title}</b>!
