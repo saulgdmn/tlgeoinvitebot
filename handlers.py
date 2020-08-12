@@ -14,8 +14,8 @@ from database import SpectatedChat, ReferralRecord
 def location(update: Update, context: CallbackContext):
     update.effective_chat.send_message(
         text='Please, send me your location',
-        markup=ReplyKeyboardMarkup(
-            keyboard=[KeyboardButton(text='Send location', request_location=True)],
+        reply_markup=ReplyKeyboardMarkup(
+            keyboard=[[KeyboardButton(text='Send location', request_location=True)]],
             one_time_keyboard=True, resize_keyboard=True))
 
 def stats_command(update: Update, context: CallbackContext):
