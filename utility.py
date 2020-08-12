@@ -87,7 +87,7 @@ def is_member(bot, chat_id, user_id):
 def verify_location(long, lat, chat: SpectatedChat):
     loc = reverse_geocode.get((lat, long))
     log.info(loc)
-    return loc.get('code') == get_chat_lang(chat).get('country_code')
+    return loc.get('country_code') == get_chat_lang(chat).get('country_code')
 
 
 def administrators_only(func):
