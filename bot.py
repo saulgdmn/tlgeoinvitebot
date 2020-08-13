@@ -26,7 +26,8 @@ def main():
     dp.add_handler(ConversationHandler(
         entry_points=[
             CommandHandler(
-                command="start", callback=handlers.request_location_handler,
+                command="start",
+                callback=handlers.request_location_handler,
                 filters=Filters.private &
                         Filters.regex(settings.CALLBACK_DATA_REGEX['DEEPLINKING_LINK']))
         ],
@@ -41,7 +42,9 @@ def main():
         ]))
 
     dp.add_handler(CommandHandler(
-        command="start", callback=handlers.start_command, filters=Filters.private))
+        command="start", callback=handlers.start_command,
+        filters=Filters.private &
+                ~Filters.regex(settings.CALLBACK_DATA_REGEX['DEEPLINKING_LINK'])))
     dp.add_handler(CommandHandler(
         command="stats", callback=handlers.stats_command, filters=Filters.private))
     dp.add_handler(CommandHandler(
