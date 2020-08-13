@@ -149,7 +149,9 @@ def format_chat_stats(bot, chat: SpectatedChat, top):
 
         formatted_users.append(
             chat_lang.get('user_stat_pattern').format(
-                user_score=stat['invited_users_count'] * settings.GEO_INVITED_USER_WEIGHT, user_mention=user.mention_html()))
+                invited_users_count=stat['invited_users_count'],
+                user_score=stat['invited_users_count'] * settings.GEO_INVITED_USER_WEIGHT,
+                user_mention=user.mention_html()))
 
     total_invited_users_count = sum([stat['invited_users_count'] for stat in user_stats])
     return chat_lang.get('statistic_text').format(
@@ -162,6 +164,7 @@ def format_personal_stats(chat: SpectatedChat, user_id):
     invited_users_count = chat.retrieve_personal_referral_records(user_id)
     return get_chat_lang(chat).get('personal_statistic_text').format(
         chat_title=chat.title,
+        invited_users_count=invited_users_count,
         user_score=invited_users_count * settings.GEO_INVITED_USER_WEIGHT
     )
 

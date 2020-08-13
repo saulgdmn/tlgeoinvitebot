@@ -2,7 +2,7 @@
   shortcut: "en"
   country_code: "UA"
 
-  user_stat_pattern: "{user_mention} - <b>{user_score}</b> GeoCash"
+  user_stat_pattern: "{user_mention} - <b>{invited_users_count}</b> friends = <b>{user_score}</b> GeoCash"
   join_button_text: "Join GeoDB"
   invite_button_text: "Invite"
   interested_button_text: "Interested"
@@ -90,7 +90,7 @@
   shortcut: "hi"
   country_code: "IN"
 
-  user_stat_pattern: "{user_mention} - <b>{user_score}</b> geo"
+  user_stat_pattern: "{user_mention} - <b>{invited_users_count}</b> friends = <b>{user_score}</b> GeoCash"
   join_button_text: "Join GeoDB"
   invite_button_text: "Invite"
   interested_button_text: "Interested"
@@ -163,4 +163,4 @@
   personal_statistic_text: |
     (hindi)Your personal statistic for <b>{chat_title}</b>:
 
-    <b>{user_score}</b> geo
+    <b>{invited_users_count}</b> friends = <b>{user_score}</b> GeoCash
