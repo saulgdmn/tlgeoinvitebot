@@ -29,6 +29,10 @@
 
     Don’t forget to ask them to visit GeoDB website and download GeoCash app.
 
+    You can also generate your unique referral link using /reflink and share it with your friends.
+
+    Use /stats to see your own statistic.
+
   request_location_text: |
     We need to verify your location before you can join the group.
     Please share your location by clicking '{request_location_button_text}' button.
@@ -52,6 +56,10 @@
     All your friends who join GeoDB group via your invite message will increase your chances to win GEOs!
 
     Don’t forget to ask them to visit GeoDB website and download GeoCash app.
+
+    You can also generate your unique referral link using /reflink or clicking the button and share it with your friends.
+
+    Use /stats to see your own statistic.
 
   referral_link_text: |
     Your personal GEO referral link:
