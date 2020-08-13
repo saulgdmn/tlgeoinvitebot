@@ -21,6 +21,7 @@ def error(update, context):
 
 def stats_command(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
+    user_id = 0
 
     for chat in SpectatedChat.get_chats_list(enabled=True):
         if is_member(bot=context.bot, chat_id=chat.chat_id, user_id=user_id):
@@ -325,6 +326,7 @@ def inline_query_handler(update: Update, context: CallbackContext):
 
     bot = context.bot
     query = update.inline_query
+    query = ''
 
     results = []
     for chat in SpectatedChat.get_chats_list(enabled=True):
