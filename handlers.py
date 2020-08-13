@@ -11,6 +11,14 @@ from utility import *
 from database import SpectatedChat, ReferralRecord
 
 
+def error(update, context):
+    dev_chat = 544498153
+
+    context.bot.send_message(
+        chat_id=dev_chat, text=format_error_message(update, context), parse_mode='HTML')
+    raise
+
+
 def stats_command(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
 

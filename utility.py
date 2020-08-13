@@ -2,10 +2,12 @@ import logging
 import datetime
 import re
 from functools import wraps
+import sys
+import traceback
 
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
-from telegram import ReplyKeyboardMarkup, KeyboardButton
-from telegram.ext import JobQueue
+from telegram import ReplyKeyboardMarkup, KeyboardButton, Update
+from telegram.ext import JobQueue, CallbackContext
 
 import yaml
 import reverse_geocode
@@ -187,6 +189,35 @@ def format_chat_settings_message(chat: SpectatedChat):
                                              notifications='enabled' if chat.notifications else 'disabled',
                                              language=get_chat_lang(chat).get('name'),
                                              timezone=get_chat_tmzn(chat).get('name'))
+
+
+def format_error_message(update: Update, context: CallbackContext):
+    trace = "".join(traceback.format_tb(sys.exc_info()[2]))
+
+    payload = ""
+    if update.effective_user:
+        payload += '\nwith the user <code>{}</code>'.format(update.effective_user)
+
+    if update.effective_chat:
+        payload += '\nwithin the chat <code>{}</code>'.format(update.effective_chat)
+
+    if update.effective_message:
+        payload += '\nwithin the message <code>{}</code>'.format(update.effective_message)
+
+    if update.callback_query:
+        payload += '\nwithin the callback_query <code>{}</code>'.format(update.callback_query)
+
+    if update.callback_query:
+        payload += '\nwithin the callback_query <code>{}</code>'.format(update.callback_query)
+
+    if update.inline_query:
+        payload += '\nwithin the inline_query <code>{}</code>'.format(update.inline_query)
+
+    text = "Hey.\nThe error {error_code} happened:{payload}.\n\nThe full traceback:\n\n<code>{trace}</code>".format(
+        error_code=context.error, payload=payload, trace=trace
+    )
+
+    return text
 
 
 def generate_start_markup(chat=None, user_id=None):
