@@ -140,7 +140,7 @@
     Humari website ko check karna aur GeoCash app ko download karna na bhule.
 
   referral_link_text: |
-    Your personal referral link:
+    Your personal referral link for <b>{chat_title}</b>:
 
     {referral_link}
 
