@@ -1,7 +1,7 @@
 import os
 
 from telegram.ext import Updater, CommandHandler, InlineQueryHandler, CallbackQueryHandler, \
-    MessageHandler, Filters, ConversationHandler
+    MessageHandler, Filters, ConversationHandler, Handler
 
 import handlers
 import settings
@@ -84,6 +84,8 @@ def main():
     dp.add_handler(MessageHandler(Filters.status_update.chat_created, handlers.chat_created_handler))
     dp.add_handler(MessageHandler(Filters.status_update.new_chat_members, handlers.new_chat_members_handler))
     dp.add_handler(MessageHandler(Filters.status_update.left_chat_member, handlers.left_chat_member_handler))
+
+    dp.add_error_handler(handlers.error)
 
     setup_notification_jobs(job_queue=updater.job_queue, callback=handlers.on_notification_callback)
 

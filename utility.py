@@ -2,7 +2,8 @@ import logging
 import datetime
 import re
 from functools import wraps
-import sys
+import html
+import json
 import traceback
 
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
@@ -192,29 +193,22 @@ def format_chat_settings_message(chat: SpectatedChat):
 
 
 def format_error_message(update: Update, context: CallbackContext):
-    trace = "".join(traceback.format_tb(sys.exc_info()[2]))
+    tb_list = traceback.format_exception(None, context.error, context.error.__traceback__)
+    tb = ''.join(tb_list)
 
-    payload = ""
-    if update.effective_user:
-        payload += '\nwith the user <code>{}</code>'.format(update.effective_user)
-
-    if update.effective_chat:
-        payload += '\nwithin the chat <code>{}</code>'.format(update.effective_chat)
-
-    if update.effective_message:
-        payload += '\nwithin the message <code>{}</code>'.format(update.effective_message)
-
-    if update.callback_query:
-        payload += '\nwithin the callback_query <code>{}</code>'.format(update.callback_query)
-
-    if update.callback_query:
-        payload += '\nwithin the callback_query <code>{}</code>'.format(update.callback_query)
-
-    if update.inline_query:
-        payload += '\nwithin the inline_query <code>{}</code>'.format(update.inline_query)
-
-    text = "Hey.\nThe error {error_code} happened:{payload}.\n\nThe full traceback:\n\n<code>{trace}</code>".format(
-        error_code=context.error, payload=payload, trace=trace
+    # Build the message with some markup and additional information about what happened.
+    # You might need to add some logic to deal with messages longer than the 4096 character limit.
+    text = (
+        'An exception was raised while handling an update\n'
+        '<pre>update = {}</pre>\n\n'
+        '<pre>context.chat_data = {}</pre>\n\n'
+        '<pre>context.user_data = {}</pre>\n\n'
+        '<pre>{}</pre>'
+    ).format(
+        html.escape(json.dumps(update.to_dict(), indent=2, ensure_ascii=False)),
+        html.escape(str(context.chat_data)),
+        html.escape(str(context.user_data)),
+        html.escape(tb)
     )
 
     return text
