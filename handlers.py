@@ -1,7 +1,7 @@
 from uuid import uuid4
 
 from telegram import Update
-from telegram import ReplyKeyboardMarkup, KeyboardButton
+from telegram import ReplyKeyboardRemove
 from telegram import InlineQueryResultArticle, InputTextMessageContent
 
 from telegram.ext import Updater, CallbackContext, ConversationHandler
@@ -67,7 +67,8 @@ def request_location_verify_handler(update: Update, context: CallbackContext):
     location = update.effective_message.location
 
     if verify_location(location.longitude, location.latitude, invited_chat) is False:
-        update.effective_chat.send_message(text=chat_lang.get('request_location_unavailable_text'))
+        update.effective_chat.send_message(
+            text=chat_lang.get('request_location_unavailable_text'), reply_markup=ReplyKeyboardRemove())
         return ConversationHandler.END
 
     bot = context.bot
@@ -106,7 +107,8 @@ def request_location_verify_handler(update: Update, context: CallbackContext):
 def request_location_failed_handler(update: Update, context: CallbackContext):
     chat_id = context.chat_data.get('chat_id', None)
     chat = SpectatedChat.get_by_chat_id(chat_id)
-    update.effective_chat.send_message(text=get_chat_lang(chat).get('request_location_failed_text'))
+    update.effective_chat.send_message(
+        text=get_chat_lang(chat).get('request_location_failed_text'), reply_markup=ReplyKeyboardRemove())
     return ConversationHandler.END
 
 

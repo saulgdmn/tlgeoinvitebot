@@ -222,7 +222,7 @@ def generate_request_location_markup(chat: SpectatedChat):
                 KeyboardButton(
                     text=get_chat_lang(chat).get('request_location_cancel_button_text')
                 )]],
-            one_time_keyboard=True, resize_keyboard=True)
+            one_time_keyboard=False, resize_keyboard=True)
 
 
 def generate_join_markup(chat: SpectatedChat):
