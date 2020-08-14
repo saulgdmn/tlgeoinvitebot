@@ -5,8 +5,9 @@ Description=Telegram Geo Invite Bot
 Type=simple
 Restart=on-failure
 RestartSec=5
-ExecStart=/home/azureuser/tlgeoinvitebot/run_dev.sh
+
 WorkingDirectory=/home/azureuser/tlgeoinvitebot
+ExecStart=run_prod.sh
 
 [Install]
 WantedBy=default.target
