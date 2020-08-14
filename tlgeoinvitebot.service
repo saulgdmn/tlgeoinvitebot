@@ -1,0 +1,13 @@
+[Unit]
+Description=Telegram Geo Invite Bot
+
+[Service]
+Type=simple
+User=azureuser
+Restart=on-failure
+RestartSec=5
+ExecStart=venv/bin/python3 bot.py
+WorkingDirectory=/home/azureuser/tlgeoinvitebot
+
+[Install]
+WantedBy=multi-user.target
