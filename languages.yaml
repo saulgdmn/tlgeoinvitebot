@@ -25,16 +25,16 @@
 
     Click <b>{invite_button_text}</b> below and choose a friend chat / group / channel from where you want to invite your friends.
 
-    All your friends who join GeoDB group via your invite message will increase your chances to win GEOs!
+    All your friends who join GeoDB group via your invite message or link will increase your chances to win GEOs!
 
     Don’t forget to ask them to visit GeoDB website and download GeoCash app.
 
-    You can also generate your unique referral link using /reflink and share it with your friends.
+    You can generate your unique referral link using command /reflink and share it with your friends.
 
     Use /stats to see your own statistic.
 
   request_location_text: |
-    We need to verify your location before you can join the group.
+    We need to verify your location before you can join the location specific group to prevent spam.
     Please share your location by clicking '{request_location_button_text}' button.
 
     <i>This option is available <u>only in a mobile telegram app</u>!</i>
@@ -62,12 +62,14 @@
     Use /stats to see your own statistic.
 
   referral_link_text: |
-    Your personal GEO referral link:
+    Your personal GEO Invite referral link:
 
     {referral_link}
 
   inline_invite_text: |
-    Hi! You have been invited to <b>{chat_title}</b>.
+    Hi! Do you know? Geo rewards you for your data!
+    This is an amazing concpet with a real use case! Over 120k downloads in 2 months!
+    I would like to personaly invite you to GeoDB local community <b>{chat_title}</b>.
     Press the button to accept!
 
   notification_text: |
@@ -84,7 +86,7 @@
   personal_statistic_text: |
     Your personal statistic for <b>{chat_title}</b>:
 
-    {user_score} geo
+    <b>{invited_users_count}</b> friends = <b>{user_score}</b> GeoCash
 
 - name: "Hindi"
   shortcut: "hi"
@@ -111,15 +113,19 @@
 
     Mera Goal hai ki aap apne dosto ko invite kar sake <b>GEO community</b> main!
 
-    Click <b>{invite_button_text}</b> below aur apne Dost ke saath chat, ya phir group, ya channel select kain.
+    Click <b>{invite_button_text}</b> aur apne Dost ke saath share kare.
 
-    Sare aapke friends jo GeoDB group ko aapkle link ke through join karenge, wo aapke GEO win main count honge!
+    Sare aapke friends jo GeoDB group ko apkle link ke through join karenge, wo aapke GEO score main count honge!
 
     Humari website ko check karna aur GeoCash app ko download karna na bhule.
 
+    referral link generate karne ke link ye command /reflink use kare.
+
+    Current /stats command.
+
   request_location_text: |
-    We need to verify your location before you can join the group.
-    Please share your location by clicking '{request_location_button_text}' button.
+    Local group main add karne ke liye location required hai.
+    Is button ko click kar ke location share kare '{request_location_button_text}' .
 
     <i>This option is available <u>only in a mobile telegram app</u>!</i>
 
@@ -140,7 +146,7 @@
     Humari website ko check karna aur GeoCash app ko download karna na bhule.
 
   referral_link_text: |
-    Your personal referral link for <b>{chat_title}</b>:
+    Apka personal referral link for <b>{chat_title}</b>:
 
     {referral_link}
 
@@ -161,6 +167,6 @@
     Total firneds invited: <b>{total_invited_users_count}</b>
 
   personal_statistic_text: |
-    (hindi)Your personal statistic for <b>{chat_title}</b>:
+    Your personal statistic for <b>{chat_title}</b>:
 
     <b>{invited_users_count}</b> friends = <b>{user_score}</b> GeoCash
