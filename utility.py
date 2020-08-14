@@ -207,7 +207,7 @@ def format_error_message(update: Update, context: CallbackContext):
         '<pre>context.matches = {}</pre>\n\n'
         '<pre>{}</pre>'
     ).format(
-        html.escape(json.dumps(update.to_dict(), indent=2, ensure_ascii=False)),
+        html.escape('' if update is None else json.dumps(update.to_dict(), indent=2, ensure_ascii=False)),
         html.escape(str(context.chat_data)),
         html.escape(str(context.user_data)),
         html.escape(str(context.job)),
