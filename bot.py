@@ -91,17 +91,17 @@ def main():
 
     database.database_startup()
 
-    updater.start_polling()
+    #updater.start_polling()
 
-    """
     updater.start_webhook(listen='0.0.0.0',
-                          port=8443,
+                          port=settings.SERVER_WEBHOOK_PORT,
                           url_path=settings.BOT_API_TOKEN,
                           key='private.key',
-                          cert='cert.pem',
-                          webhook_url='https://18.133.32.222:8443/{}'.format(settings.BOT_API_TOKEN))
+                          cert='public.pem',
+                          webhook_url='https://{}:{}/{}'.format(
+                              settings.SERVER_WEBHOOK_IP, settings.SERVER_WEBHOOK_PORT, settings.BOT_API_TOKEN))
 
-    """
+
     updater.idle()
     database.database_closeup()
 

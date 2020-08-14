@@ -2,6 +2,9 @@ import os
 
 from utility import load_config, load_languages
 
+SERVER_WEBHOOK_IP = os.getenv('SERVER_WEBHOOK_IP')
+SERVER_WEBHOOK_PORT = int(os.getenv('SERVER_WEBHOOK_PORT'))
+
 CONFIG = load_config(os.getenv('CONFIG_PATH'))
 LANGUAGES = load_languages(os.getenv('LANGUAGES_PATH'))
 
