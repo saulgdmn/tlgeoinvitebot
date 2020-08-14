@@ -6,7 +6,7 @@ Type=simple
 User=azureuser
 Restart=on-failure
 RestartSec=5
-ExecStart=run_dev.sh
+ExecStart=/home/azureuser/tlgeoinvitebot/run_dev.sh
 WorkingDirectory=/home/azureuser/tlgeoinvitebot
 
 [Install]
