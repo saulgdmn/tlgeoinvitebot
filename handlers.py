@@ -45,6 +45,21 @@ def start_command(update: Update, context: CallbackContext):
             invite_button_text=get_lang('en').get('invite_button_text')),
         reply_markup=generate_start_markup(), parse_mode='HTML')
 
+@administrators_only
+def invite_contest_callback(update: Update, context: CallbackContext):
+    for chat in SpectatedChat.get_chats_list(enabled=True)
+        formatted_chat_statistic = format_chat_stats(
+            bot=context.bot, chat=chat, top=-1)
+        if formatted_chat_statistic is None:
+            update.effective_chat.send_message(
+                text=format_chat_notification(chat), reply_markup=generate_start_markup(chat),
+                parse_mode='HTML')
+        else:
+            update.effective_chat.send_message(
+                text='{}\n{}'.format(format_chat_notification(chat), formatted_chat_statistic),
+                reply_markup=generate_start_markup(chat),
+                parse_mode='HTML')
+
 
 def request_location_handler(update: Update, context: CallbackContext):
     """Handle the command /start issued in private chat."""

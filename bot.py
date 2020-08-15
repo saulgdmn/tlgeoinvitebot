@@ -48,6 +48,8 @@ def main():
     dp.add_handler(CommandHandler(
         command="stats", callback=handlers.stats_command, filters=Filters.private))
     dp.add_handler(CommandHandler(
+        command="invite_contest", callback=handlers.invite_contest_callback, filters=Filters.private))
+    dp.add_handler(CommandHandler(
         command="reflink", callback=handlers.referral_link_command, filters=Filters.private))
     dp.add_handler(CommandHandler(
         command="chats", callback=handlers.chats_command_handler, filters=Filters.private))
