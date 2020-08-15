@@ -47,6 +47,7 @@ def start_command(update: Update, context: CallbackContext):
 
 @administrators_only
 def invite_contest_callback(update: Update, context: CallbackContext):
+    update.effective_chat.send_message(text='Generating stats..')
     for chat in SpectatedChat.get_chats_list(enabled=True):
         formatted_chat_statistic = format_chat_stats(
             bot=context.bot, chat=chat, top=-1)
