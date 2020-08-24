@@ -47,19 +47,10 @@ def start_command(update: Update, context: CallbackContext):
 
 @administrators_only
 def invite_contest_callback(update: Update, context: CallbackContext):
-    update.effective_chat.send_message(text='Generating stats..')
     for chat in SpectatedChat.get_chats_list(enabled=True):
-        formatted_chat_statistic = format_chat_stats(
-            bot=context.bot, chat=chat, top=-1)
-        if formatted_chat_statistic is None:
-            update.effective_chat.send_message(
-                text=format_chat_notification(chat), reply_markup=generate_start_markup(chat),
-                parse_mode='HTML')
-        else:
-            update.effective_chat.send_message(
-                text='{}\n{}'.format(format_chat_notification(chat), formatted_chat_statistic),
-                reply_markup=generate_start_markup(chat),
-                parse_mode='HTML')
+        update.effective_chat.send_message(text='Generating invite contest for <b>{}</b>'.format(chat.title), parse_mode='HTML')
+        for text in format_invite_contest_texts(bot=context.bot, chat=chat):
+            update.effective_chat.send_message(text=text, parse_mode='HTML')
 
 
 def request_location_handler(update: Update, context: CallbackContext):

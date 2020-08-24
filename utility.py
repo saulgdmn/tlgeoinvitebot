@@ -5,6 +5,7 @@ from functools import wraps
 import html
 import json
 import traceback
+import math
 
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 from telegram import ReplyKeyboardMarkup, KeyboardButton, Update
@@ -161,6 +162,28 @@ def format_chat_stats(bot, chat: SpectatedChat, top):
         chat_title=chat.title,
         formatted_users='\n'.join(formatted_users),
         total_invited_users_count=total_invited_users_count)
+
+
+def format_invite_contest_texts(bot, chat: SpectatedChat):
+    """Return a formatted string of user referral statistic"""
+
+    user_stats = chat.retrieve_referral_records()
+    if user_stats is None:
+        return None
+
+    chat_lang = get_chat_lang(chat)
+
+    formatted_users = []
+    for key, stat in user_stats:
+        user = bot.get_chat_member(chat_id=chat.chat_id, user_id=stat['user_id']).user
+
+        formatted_users.append(
+            chat_lang.get('user_stat_pattern').format(
+                invited_users_count=stat['invited_users_count'],
+                user_score=stat['invited_users_count'] * settings.GEO_INVITED_USER_WEIGHT,
+                user_mention=user.mention_html()))
+
+    return ['\n'.join(formatted_users[i*40:(i+1)*40]) for i in range(math.ceil(len(formatted_users)/40))]
 
 
 def format_personal_stats(chat: SpectatedChat, user_id):
