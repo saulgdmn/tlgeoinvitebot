@@ -174,7 +174,7 @@ def format_invite_contest_texts(bot, chat: SpectatedChat):
     chat_lang = get_chat_lang(chat)
 
     formatted_users = []
-    for key, stat in user_stats:
+    for key, stat in enumerate(user_stats):
         user = bot.get_chat_member(chat_id=chat.chat_id, user_id=stat['user_id']).user
 
         formatted_users.append(
