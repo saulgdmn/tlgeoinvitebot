@@ -303,7 +303,7 @@ def drop_stats_callback(update: Update, context: CallbackContext):
         return
 
     with open('awards.json', 'w') as f:
-        json.dump(get_user_awards(), f)
+        json.dump(get_user_awards(chat), f)
 
     update.effective_chat.send_document(open('awards.json', 'rb'))
     chat.drop_referral_records()
