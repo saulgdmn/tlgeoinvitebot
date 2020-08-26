@@ -150,6 +150,7 @@ def setup_notification_jobs(job_queue: JobQueue, callback):
 
 
 def get_user_awards(chat: SpectatedChat):
+
     return json.dumps([{
         'user_id': c['user_id'],
         'award': c['invited_users_count'] * settings.GEO_INVITED_USER_WEIGHT,
