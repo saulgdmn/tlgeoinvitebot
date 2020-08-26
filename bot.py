@@ -89,19 +89,21 @@ def main():
 
     dp.add_error_handler(handlers.error)
 
-    setup_notification_jobs(job_queue=updater.job_queue, callback=handlers.on_notification_callback)
+    if settings.DEBUG is False:
+        setup_notification_jobs(job_queue=updater.job_queue, callback=handlers.on_notification_callback)
 
     database.database_startup()
 
-    #updater.start_polling()
-
-    updater.start_webhook(listen='0.0.0.0',
-                          port=settings.SERVER_WEBHOOK_PORT,
-                          url_path=settings.BOT_API_TOKEN,
-                          key='private.key',
-                          cert='public.pem',
-                          webhook_url='https://{}:{}/{}'.format(
-                              settings.SERVER_WEBHOOK_IP, settings.SERVER_WEBHOOK_PORT, settings.BOT_API_TOKEN))
+    if settings.DEBUG:
+        updater.start_polling()
+    else:
+        updater.start_webhook(listen='0.0.0.0',
+                              port=settings.SERVER_WEBHOOK_PORT,
+                              url_path=settings.BOT_API_TOKEN,
+                              key='private.key',
+                              cert='public.pem',
+                              webhook_url='https://{}:{}/{}'.format(
+                                  settings.SERVER_WEBHOOK_IP, settings.SERVER_WEBHOOK_PORT, settings.BOT_API_TOKEN))
 
     #updater.job_queue.run_once(when=1, callback=handlers.on_notification_callback, context="-1001340533305")
 

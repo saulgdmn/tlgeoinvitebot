@@ -149,6 +149,13 @@ def setup_notification_jobs(job_queue: JobQueue, callback):
         run_notification_job(chat=chat, job_queue=job_queue, callback=callback)
 
 
+def get_user_awards(chat: SpectatedChat):
+    return json.dumps([{
+        'user_id': c['user_id'],
+        'award': c['invited_users_count'] * settings.GEO_INVITED_USER_WEIGHT,
+    } for c in chat.retrieve_referral_records()])
+
+
 def generate_deeplinking_link(chat_id, user_id):
     return 'https://t.me/{}?start={}'.format(
         settings.BOT_USERNAME,

@@ -81,6 +81,7 @@ class SpectatedChat(BaseModel):
             .select()\
             .where(ReferralRecord.chat_id == self.chat_id)
 
+
     def get_chats_list(enabled=None):
         if enabled is None:
             query = SpectatedChat.select()
@@ -164,7 +165,3 @@ class ReferralRecord(BaseModel):
 def database_startup():
     with db:
         db.create_tables([SpectatedChat, ReferralRecord])
-
-
-def database_closeup():
-    db.close()

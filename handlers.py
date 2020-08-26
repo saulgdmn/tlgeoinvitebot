@@ -302,6 +302,10 @@ def drop_stats_callback(update: Update, context: CallbackContext):
         log.info('drop_stats_callback chat not founded: {}'.format(chat_id))
         return
 
+    with open('awards.json', 'w') as f:
+        json.dump(get_user_awards(), f)
+
+    update.effective_chat.send_document(open('awards.json', 'rb'))
     chat.drop_referral_records()
     update.callback_query.answer('Statistic was dropped.')
 

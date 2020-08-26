@@ -8,6 +8,8 @@ SERVER_WEBHOOK_PORT = int(os.getenv('SERVER_WEBHOOK_PORT'))
 CONFIG = load_config(os.getenv('CONFIG_PATH'))
 LANGUAGES = load_languages(os.getenv('LANGUAGES_PATH'))
 
+DEBUG = True if CONFIG['DEBUG'] == 'true' else False
+
 BOT_USERNAME = CONFIG['BOT_USERNAME']
 BOT_API_TOKEN = CONFIG['BOT_API_TOKEN']
 
