@@ -12,8 +12,14 @@ from database import SpectatedChat, ReferralRecord
 
 
 def error(update, context):
-    context.bot.send_message(
-        chat_id=settings.DEVELOPER_CHAT_ID, text=format_error_message(update, context), parse_mode='HTML')
+
+    text = format_error_message(update, context)
+
+    if len(text) > 4096:
+        for x in range(0, len(text), 4096):
+            context.bot.send_message(chat_id=settings.DEVELOPER_CHAT_ID, text=text[x:x+4096], parse_mode='HTML')
+    else:
+        context.bot.send_message(chat_id=settings.DEVELOPER_CHAT_ID, text=text, parse_mode='HTML')
     raise
 
 
