@@ -310,6 +310,8 @@ def drop_stats_callback(update: Update, context: CallbackContext):
         json.dump(get_user_awards(chat), f)
 
     update.effective_chat.send_document(open('awards.json', 'rb'))
+    context.bot.send_message(
+        chat_id=chat.chat_id, text=get_chat_lang(chat).get('contest_end_text'), parse_mode='HTML')
     chat.drop_referral_records()
     update.callback_query.answer('Statistic was dropped.')
 

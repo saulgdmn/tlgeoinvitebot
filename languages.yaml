@@ -88,6 +88,9 @@
 
     <b>{invited_users_count}</b> friends = <b>{user_score}</b> GeoCash
 
+  contest_end_text: |
+    The invite contest is ended in this group. Please, go to @GeoDino_BOT to withdraw your Geo.
+
 - name: "Hindi"
   shortcut: "hi"
   country_code: "IN"
@@ -253,3 +256,6 @@
     Your personal statistic for <b>{chat_title}</b>:
 
     <b>{invited_users_count}</b> friends = <b>{user_score}</b> GeoCash
+
+  contest_end_text: |
+    The invite contest is ended in this group. Please, go to @GeoDino_BOT to withdraw your Geo.
