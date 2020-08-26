@@ -140,7 +140,7 @@ def update_member_status(bot, chat: SpectatedChat):
             log.info('Updating status for a member: {} '.format(member))
             continue
 
-        r.update_joined_chat(True)
+        #r.update_joined_chat(True)
 
 
 def setup_notification_jobs(job_queue: JobQueue, callback):
