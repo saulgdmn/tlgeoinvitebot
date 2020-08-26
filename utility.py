@@ -125,6 +125,15 @@ def run_notification_job(chat: SpectatedChat, job_queue: JobQueue, callback):
             context=chat.chat_id)
 
 
+def update_member_status(bot, chat: SpectatedChat):
+    for r in chat.retrieve_invited_users_referral_records():
+        member = bot.get_chat_member(chat_id=chat.chat_id, user_id=r.to_user)
+        if member.user is None or member.is_member is False:
+            r.update_joined_chat(False)
+            log.info('Updating status for a member: {} '.format(member))
+            continue
+
+
 def setup_notification_jobs(job_queue: JobQueue, callback):
 
     for chat in SpectatedChat.get_chats_list(enabled=True):

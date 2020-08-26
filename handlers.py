@@ -78,6 +78,11 @@ def request_location_verify_handler(update: Update, context: CallbackContext):
     invited_chat = SpectatedChat.get_by_chat_id(invited_chat_id)
     chat_lang = get_chat_lang(invited_chat)
 
+    if update.effective_message.forward_from is not None:
+        update.effective_chat.send_message(
+            text='Don\'t scam!', reply_markup=ReplyKeyboardRemove())
+        return ConversationHandler.END
+
     location = update.effective_message.location
 
     if verify_location(location.longitude, location.latitude, invited_chat) is False:
@@ -372,6 +377,7 @@ def chat_created_handler(update: Update, context: CallbackContext):
         return
 
     log.info('This chat don\'t have a bot administrator')
+    chat.leave()
     return
 
 
@@ -396,6 +402,7 @@ def new_chat_members_handler(update: Update, context: CallbackContext):
 
     if SpectatedChat.is_spectated(chat.id) is False:
         log.info('{} chat is not spectated.')
+        chat.leave()
         return
 
     for user in message.new_chat_members:
@@ -443,6 +450,9 @@ def on_notification_callback(context: CallbackContext):
         log.info('on_notification_callback chat not founded: {}'.format(chat_id))
         return
 
+    log.info('Running update_member_status..')
+    update_member_status(bot=context.bot, chat=chat)
+
     formatted_chat_statistic = format_chat_stats(
         bot=context.bot, chat=chat, top=settings.GEO_RATING_USERS_COUNT)
     if formatted_chat_statistic is None:
@@ -455,3 +465,4 @@ def on_notification_callback(context: CallbackContext):
             text='{}\n{}'.format(format_chat_notification(chat), formatted_chat_statistic),
             reply_markup=generate_start_markup(chat),
             parse_mode='HTML')
+
