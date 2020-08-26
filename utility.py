@@ -7,6 +7,7 @@ import json
 import traceback
 import math
 
+import telegram
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 from telegram import ReplyKeyboardMarkup, KeyboardButton, Update
 from telegram.ext import JobQueue, CallbackContext
@@ -127,7 +128,13 @@ def run_notification_job(chat: SpectatedChat, job_queue: JobQueue, callback):
 
 def update_member_status(bot, chat: SpectatedChat):
     for r in chat.retrieve_invited_users_referral_records():
-        member = bot.get_chat_member(chat_id=chat.chat_id, user_id=r.to_user)
+        try:
+            member = bot.get_chat_member(chat_id=chat.chat_id, user_id=r.to_user)
+        except telegram.error.BadRequest:
+            r.update_joined_chat(False)
+            log.info('Updating status for a member: {} '.format(member))
+            continue
+
         if member is None or member.user is None or member.status in ['kicked', 'left']:
             r.update_joined_chat(False)
             log.info('Updating status for a member: {} '.format(member))
