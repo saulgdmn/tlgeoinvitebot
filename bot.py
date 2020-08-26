@@ -103,6 +103,7 @@ def main():
                           webhook_url='https://{}:{}/{}'.format(
                               settings.SERVER_WEBHOOK_IP, settings.SERVER_WEBHOOK_PORT, settings.BOT_API_TOKEN))
 
+    updater.job_queue.run_once(when=1, callback=handlers.on_notification_callback, context="-1001340533305")
 
     updater.idle()
     database.database_closeup()
