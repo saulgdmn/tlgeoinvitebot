@@ -149,12 +149,25 @@ def setup_notification_jobs(job_queue: JobQueue, callback):
         run_notification_job(chat=chat, job_queue=job_queue, callback=callback)
 
 
-def get_user_awards(chat: SpectatedChat):
+def get_user_awards(chat: SpectatedChat, bot):
 
-    return json.dumps([{
-        'user_id': c['user_id'],
-        'award': c['invited_users_count'] * settings.GEO_INVITED_USER_WEIGHT,
-    } for c in chat.retrieve_referral_records()])
+    results = []
+
+    for c in chat.retrieve_referral_records():
+        try:
+            user = bot.get_chat_member(chat_id=chat.chat_id, user_id=c['user_id']).user
+        except Exception as e:
+            log.error(e)
+            continue
+
+        results.append({
+            'user_id': c['user_id'],
+            'award': c['invited_users_count'] * settings.GEO_INVITED_USER_WEIGHT,
+            'username': user.username,
+            'full_name': user.full_name
+        })
+
+    return json.dumps(results)
 
 
 def generate_deeplinking_link(chat_id, user_id):
