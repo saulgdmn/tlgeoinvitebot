@@ -167,7 +167,7 @@ def get_user_awards(chat: SpectatedChat, bot):
             'full_name': user.full_name
         })
 
-    return json.dumps(results)
+    return results
 
 
 def generate_deeplinking_link(chat_id, user_id):
