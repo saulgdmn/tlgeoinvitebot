@@ -307,7 +307,7 @@ def drop_stats_callback(update: Update, context: CallbackContext):
         return
 
     with open('awards.json', 'w') as f:
-        json.dump(get_user_awards(chat, bot), f)
+        json.dump(get_user_awards(chat, context.bot), f)
 
     update.effective_chat.send_document(document=open('awards.json', 'rb'))
     context.bot.send_message(
